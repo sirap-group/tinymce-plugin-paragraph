@@ -32,8 +32,8 @@ tinymce.PluginManager.add('paragraph', function(editor) {
 		// console.log('paragraph',paragraph);
 
 		editor.windowManager.open({
-			title: "Paragraph properties",
-			// bodyType: 'tabpanel',
+			bodyType: 'tabpanel',
+			title: 'Paragraph properties',
 			data: {
 				indent: editor.dom.getStyle(paragraph,'text-indent'),
 				linespacing: editor.dom.getStyle(paragraph,'line-height'),
@@ -42,7 +42,15 @@ tinymce.PluginManager.add('paragraph', function(editor) {
 				borderwidth: editor.dom.getStyle(paragraph,'border-width'),
 				bordercolor: editor.dom.getStyle(paragraph,'border-color')
 			},
-			body: generalParagraphForm,
+			body: [{
+					title: 'Spacings',
+					type: 'form',
+					items: spacingsTab
+				},{
+					title: 'Borders',
+					type: 'form',
+					items: bordersTab
+			}],
 			onsubmit: function(evt){
 				editor.dom.setStyle(paragraph,'text-indent',evt.data.indent);
 				editor.dom.setStyle(paragraph,'line-height',evt.data.linespacing);
@@ -64,35 +72,119 @@ tinymce.PluginManager.add('paragraph', function(editor) {
 			}
 		}
 	}
+	function createUnitSelectBox(inputName){
+		return {
+			label: 'Unit',
+			name: inputName,
+			type: 'listbox',
+			text: 'None',
+			minWidth: 90,
+			maxWidth: null,
+			values: [
+				{text: 'pt', value: 'pt'},
+				{text: 'cm', value: 'cm'},
+				{text: 'mm', value: 'mm'}
+			]
+		};
+	}
 
-	var generalParagraphForm = {
+	var spacingsTab = {
 		type: 'form',
 		layout: 'flex',
 		direction: 'column',
 		labelGapCalc: 'children',
-		padding: 0,
-		items: [
+		padding: 0
+	};
+	var bordersTab = {
+		type: 'form',
+		layout: 'flex',
+		direction: 'column',
+		labelGapCalc: 'children',
+		padding: 0
+	};
+
+	function createFieldset(title, items){
+		return {
+			type: 'fieldset',
+			title: title,
+			items: items
+		};
+	}
+
+	function createForm(items){
+		return {
+			type: 'form',
+			labelGapCalc: false,
+			padding: 0,
+			layout: 'grid',
+			columns: 2,
+			defaults: {
+				type: 'textbox',
+				maxWidth: 100
+			},
+			items: items
+		};
+	}
+
+	spacingsTab.items = [
+		createFieldset('Paragraph',[createForm([
+			{label: 'Indent', name: 'indent'}, createUnitSelectBox('indentUnit'),
+			{label: 'Line spacing', name: 'linespacing'}, createUnitSelectBox('linespacingUnit')
+		])]),
+		createFieldset('paddings',[createForm([
 			{
-				type: 'form',
-				labelGapCalc: false,
-				padding: 0,
-				layout: 'grid',
-				columns: 2,
-				defaults: {
-					type: 'textbox',
-					maxWidth: 100
-				},
-				items: [
-					{label: 'Indent', name: 'indent'},
-					{label: 'Line spacing', name: 'linespacing'},
-					{label: 'Padding', name: 'padding'},
-					{label: 'Margin', name: 'margin'},
-					{label: 'Border width', name: 'borderwidth'},
-					{label: 'Border color', name: 'bordercolor', type: 'colorbox', onaction: createColorPickAction()},
+				label: 'Padding',
+				name: 'padding'
+			},{
+				label: 'Unit',
+				name: 'paddingUnit',
+				type: 'listbox',
+				text: 'None',
+				minWidth: 90,
+				maxWidth: null,
+				values: [
+					{text: 'pt', value: 'pt'},
+					{text: 'cm', value: 'cm'},
+					{text: 'mm', value: 'mm'}
 				]
 			}
+		])]),
+		createFieldset('margins',[createForm([
+			{
+				label: 'Margin',
+				name: 'margin'
+			},{
+				label: 'Unit',
+				name: 'marginUnit',
+				type: 'listbox',
+				text: 'None',
+				minWidth: 90,
+				maxWidth: null,
+				values: [
+					{text: 'pt', value: 'pt'},
+					{text: 'cm', value: 'cm'},
+					{text: 'mm', value: 'mm'}
+				]
+			}
+		])])
+	];
+
+	bordersTab.items = [{
+		type: 'form',
+		labelGapCalc: false,
+		padding: 0,
+		layout: 'grid',
+		columns: 2,
+		defaults: {
+			type: 'textbox',
+			maxWidth: 100
+		},
+		items: [
+			{label: 'Border width', name: 'borderwidth'},
+			{label: 'Border color', name: 'bordercolor', type: 'colorbox', onaction: createColorPickAction()}
 		]
-	};
+	}];
+
 
 	// change DIV blocks in P on their content changes
 	// don't transform outer div elements that can contains tables and paragraphs
