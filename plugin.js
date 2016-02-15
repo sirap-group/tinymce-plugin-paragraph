@@ -34,6 +34,7 @@ tinymce.PluginManager.add('paragraph', function(editor) {
 		editor.windowManager.open({
 			bodyType: 'tabpanel',
 			title: 'Paragraph properties',
+			body: [ generalTab, spacingsTab, bordersTab ],
 			data: {
 				indent: editor.dom.getStyle(paragraph,'text-indent'),
 				linespacing: editor.dom.getStyle(paragraph,'line-height'),
@@ -42,15 +43,6 @@ tinymce.PluginManager.add('paragraph', function(editor) {
 				borderwidth: editor.dom.getStyle(paragraph,'border-width'),
 				bordercolor: editor.dom.getStyle(paragraph,'border-color')
 			},
-			body: [{
-					title: 'Spacings',
-					type: 'form',
-					items: spacingsTab
-				},{
-					title: 'Borders',
-					type: 'form',
-					items: bordersTab
-			}],
 			onsubmit: function(evt){
 				editor.dom.setStyle(paragraph,'text-indent',evt.data.indent);
 				editor.dom.setStyle(paragraph,'line-height',evt.data.linespacing);
@@ -91,22 +83,20 @@ tinymce.PluginManager.add('paragraph', function(editor) {
 			]
 		};
 	}
-
-	var spacingsTab = {
-		type: 'form',
-		layout: 'flex',
-		direction: 'column',
-		labelGapCalc: 'children',
-		padding: 0
-	};
-	var bordersTab = {
-		type: 'form',
-		layout: 'flex',
-		direction: 'column',
-		labelGapCalc: 'children',
-		padding: 0
-	};
-
+	function createTab(title,fieldsets,direction){
+		return {
+			title: title,
+			type: 'form',
+			items: {
+				type: 'form',
+				// layout: 'flex',
+				direction: direction||'collumn',
+				labelGapCalc: 'children',
+				padding: 0,
+				items: fieldsets
+			}
+		};
+	}
 	function createFieldset(title, items){
 		return {
 			type: 'fieldset',
@@ -128,51 +118,46 @@ tinymce.PluginManager.add('paragraph', function(editor) {
 			items: items
 		};
 	}
+	function createListBox(label,name,values){
+		return {
+			label: label,
+			name: name,
+			type: 'listbox',
+			text: 'None',
+			minWidth: 90,
+			maxWidth: null,
+			values: values
+		};
+	}
+	function getUnitValues(){
+		return [
+			{text: 'pt', value: 'pt'},
+			{text: 'cm', value: 'cm'},
+			{text: 'mm', value: 'mm'}
+		];
+	}
 
-	spacingsTab.items = [
+	var generalTab = createTab('General',[
 		createFieldset('Paragraph',[createForm([
 			{label: 'Indent', name: 'indent'}, createUnitSelectBox('indentUnit'),
 			{label: 'Line spacing', name: 'linespacing'}, createUnitSelectBox('linespacingUnit')
-		])]),
-		createFieldset('paddings',[createForm([
-			{
-				label: 'Padding',
-				name: 'padding'
-			},{
-				label: 'Unit',
-				name: 'paddingUnit',
-				type: 'listbox',
-				text: 'None',
-				minWidth: 90,
-				maxWidth: null,
-				values: [
-					{text: 'pt', value: 'pt'},
-					{text: 'cm', value: 'cm'},
-					{text: 'mm', value: 'mm'}
-				]
-			}
-		])]),
-		createFieldset('margins',[createForm([
-			{
-				label: 'Margin',
-				name: 'margin'
-			},{
-				label: 'Unit',
-				name: 'marginUnit',
-				type: 'listbox',
-				text: 'None',
-				minWidth: 90,
-				maxWidth: null,
-				values: [
-					{text: 'pt', value: 'pt'},
-					{text: 'cm', value: 'cm'},
-					{text: 'mm', value: 'mm'}
-				]
-			}
 		])])
-	];
-
-	bordersTab.items = [{
+	]);
+	var spacingsTab = createTab('Spacing',[
+		createFieldset('Padding',[createForm([
+			{ label: 'Padding top', name: 'paddingTop' }, createListBox('Unit','paddingTopUnit',getUnitValues()),
+			{ label: 'Padding right', name: 'paddingRight' }, createListBox('Unit','paddingRightUnit',getUnitValues()),
+			{ label: 'Padding bottom', name: 'paddingBottom' }, createListBox('Unit','paddingBottomUnit',getUnitValues()),
+			{ label: 'Padding left', name: 'paddingLeft' }, createListBox('Unit','paddingLeftUnit',getUnitValues())
+		])]),
+		createFieldset('Margin',[createForm([
+		  { label: 'Margin top', name: 'marginTop' }, createListBox('Unit','marginTopUnit',getUnitValues()),
+		  { label: 'Margin right', name: 'marginRight' }, createListBox('Unit','marginRightUnit',getUnitValues()),
+		  { label: 'Margin bottom', name: 'marginBottom' }, createListBox('Unit','marginBottomUnit',getUnitValues()),
+		  { label: 'Margin left', name: 'marginLeft' }, createListBox('Unit','marginLeftUnit',getUnitValues())
+		])])
+	]);
+	var bordersTab = createTab('Borders',[{
 		type: 'form',
 		labelGapCalc: false,
 		padding: 0,
@@ -186,8 +171,7 @@ tinymce.PluginManager.add('paragraph', function(editor) {
 			{label: 'Border width', name: 'borderwidth'},
 			{label: 'Border color', name: 'bordercolor', type: 'colorbox', onaction: createColorPickAction()}
 		]
-	}];
-
+	}]);
 
 	// Check if selected text node is a direct chid of a div element.
 	// If it does, wrap the text node in a new p element
