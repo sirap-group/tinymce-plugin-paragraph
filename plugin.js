@@ -64,11 +64,15 @@ tinymce.PluginManager.add('paragraph', function(editor) {
 			}
 		});
 	}
-	function div2p(changeEvt){
-		if (changeEvt.lastLevel) {
-			var selectedParagraph = editor.dom.getParent(editor.selection.getStart(),'p,div');
-			if (selectedParagraph.tagName === 'DIV'){
-				editor.dom.rename(selectedParagraph,'p');
+	function ensureParagraphWrapsTextNode(changeEvt){
+		var currentNode, parentNode, pTag;
+		var currentRange = editor.selection.getRng();
+
+		if (currentRange.startContainer === currentRange.endContainer && currentRange.startContainer.nodeName === '#text') {
+			currentNode = currentRange.startContainer;
+			if (currentNode.parentElement && currentNode.parentElement.nodeName === 'DIV') {
+				pTag = $('<p></p>');
+				$(currentNode).wrap(pTag);
 			}
 		}
 	}
@@ -110,7 +114,6 @@ tinymce.PluginManager.add('paragraph', function(editor) {
 			items: items
 		};
 	}
-
 	function createForm(items){
 		return {
 			type: 'form',
@@ -186,9 +189,9 @@ tinymce.PluginManager.add('paragraph', function(editor) {
 	}];
 
 
-	// change DIV blocks in P on their content changes
-	// don't transform outer div elements that can contains tables and paragraphs
-	editor.on('change',div2p);
+	// Check if selected text node is a direct chid of a div element.
+	// If it does, wrap the text node in a new p element
+	editor.on('change',ensureParagraphWrapsTextNode);
 
 	editor.addMenuItem('paragraph', {
 		separator: 'before',
