@@ -6,8 +6,12 @@ module.exports = function (grunt) {
     standard: {
       options: { format: false },
       gruntfile: { src: ['gruntfile.js'] },
-      plugin: { src: ['plugin.js'] },
+      plugin: { src: ['src/**/*.js'] },
       all: { src: ['gruntfile', 'plugin.js'] }
+    },
+    browserify: {
+      src: 'src/main.js',
+      dest: 'plugin.js'
     },
     uglify: {
       dist: {
@@ -36,5 +40,5 @@ module.exports = function (grunt) {
     }
   })
 
-  grunt.registerTask('default', ['standard', 'uglify'])
+  grunt.registerTask('default', ['standard', 'browserify', 'uglify'])
 }
