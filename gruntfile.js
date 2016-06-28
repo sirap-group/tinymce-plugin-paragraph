@@ -6,13 +6,12 @@ module.exports = function (grunt) {
     standard: {
       options: { format: false },
       gruntfile: { src: ['gruntfile.js'] },
-      plugin: { src: ['src/**/*.js'] },
-      all: { src: ['gruntfile', 'plugin.js'] }
+      plugin: { src: ['src/**/*.js'] }
     },
     browserify: {
       plugin: {
         src: 'src/main.js',
-        dest: 'dist/plugin.js'
+        dest: 'plugin.js'
       }
     },
     uglify: {
