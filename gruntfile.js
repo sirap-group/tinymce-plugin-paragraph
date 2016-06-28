@@ -10,13 +10,15 @@ module.exports = function (grunt) {
       all: { src: ['gruntfile', 'plugin.js'] }
     },
     browserify: {
-      src: 'src/main.js',
-      dest: 'plugin.js'
+      plugin: {
+        src: 'src/main.js',
+        dest: 'dist/plugin.js'
+      }
     },
     uglify: {
       dist: {
         files: {
-          'plugin.min.js': ['plugin.js']
+          'dist/plugin.min.js': ['dist/plugin.js']
         }
       }
     },
