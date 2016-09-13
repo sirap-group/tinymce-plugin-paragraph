@@ -46,7 +46,7 @@ function processAllChangesOnMainWinSubmit (editor, paragraph) {
     if (evt.data.indent) {
       editor.dom.setStyle(paragraph, 'text-indent', evt.data.indent + evt.data.indentUnit)
     }
-    if (evt.data.linespacing) {
+    if (evt.data.lineSpacing) {
       editor.dom.setStyle(paragraph, 'line-height', evt.data.lineSpacing + evt.data.lineSpacingUnit)
     }
     if (evt.data.padding) {
