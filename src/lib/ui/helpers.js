@@ -14,12 +14,27 @@
 'use strict'
 
 module.exports = {
+  createTextBox: createTextBox,
   createColorPickAction: createColorPickAction,
   createUnitSelectBox: createUnitSelectBox,
   createTab: createTab,
   createFieldset: createFieldset,
   createForm: createForm,
   createListBox: createListBox
+}
+
+/**
+ * Create a simple text box
+ * @method
+ * @param {string} label The textBox label
+ * @param {string} name The textBox name
+ * @returns {TextBox} textBox The new textBox
+ */
+function createTextBox (label, name) {
+  return {
+    label: label,
+    name: name
+  }
 }
 
 /**
