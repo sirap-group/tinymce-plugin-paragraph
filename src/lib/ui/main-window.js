@@ -36,11 +36,12 @@ function openMainWinFunction (editor) {
       body: [ generalTab, spacingsTab, bordersTab ],
       data: {
         indent: editor.dom.getStyle(paragraph, 'text-indent'),
-        linespacing: editor.dom.getStyle(paragraph, 'line-height'),
+        lineSpacing: editor.dom.getStyle(paragraph, 'line-height'),
         padding: editor.dom.getStyle(paragraph, 'padding'),
         margin: editor.dom.getStyle(paragraph, 'margin'),
-        borderwidth: editor.dom.getStyle(paragraph, 'border-width'),
-        bordercolor: editor.dom.getStyle(paragraph, 'border-color')
+        borderStyle: editor.dom.getStyle(paragraph, 'border-style'),
+        borderWidth: editor.dom.getStyle(paragraph, 'border-width'),
+        borderColor: editor.dom.getStyle(paragraph, 'border-color')
       },
       onsubmit: eventHandlers.processAllChangesOnMainWinSubmit(editor, paragraph)
     })
