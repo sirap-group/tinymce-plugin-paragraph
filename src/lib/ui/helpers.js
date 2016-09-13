@@ -13,78 +13,13 @@
 
 'use strict'
 
-// var path = require('path')
-var units = require('../units')
-
 module.exports = {
-  createBordersTab: createBordersTab,
-  createSpacingTab: createSpacingTab,
-  createGeneralTab: createGeneralTab,
   createColorPickAction: createColorPickAction,
   createUnitSelectBox: createUnitSelectBox,
   createTab: createTab,
   createFieldset: createFieldset,
   createForm: createForm,
   createListBox: createListBox
-}
-
-/**
- * @function
- * @param
- * @returns
- */
-function createBordersTab (editor) {
-  return createTab('Borders', [{
-    type: 'form',
-    labelGapCalc: false,
-    padding: 0,
-    layout: 'grid',
-    columns: 2,
-    defaults: {
-      type: 'textbox',
-      maxWidth: 100
-    },
-    items: [
-      {label: 'Border width', name: 'borderwidth'},
-      {label: 'Border color', name: 'bordercolor', type: 'colorbox', onaction: createColorPickAction(editor)}
-    ]
-  }])
-}
-
-/**
- * @function
- * @param
- * @returns
- */
-function createSpacingTab () {
-  return createTab('Spacing', [
-    createFieldset('Padding', [createForm([
-      { label: 'Padding top', name: 'paddingTop' }, createListBox('Unit', 'paddingTopUnit', units.getUnitValues()),
-      { label: 'Padding right', name: 'paddingRight' }, createListBox('Unit', 'paddingRightUnit', units.getUnitValues()),
-      { label: 'Padding bottom', name: 'paddingBottom' }, createListBox('Unit', 'paddingBottomUnit', units.getUnitValues()),
-      { label: 'Padding left', name: 'paddingLeft' }, createListBox('Unit', 'paddingLeftUnit', units.getUnitValues())
-    ])]),
-    createFieldset('Margin', [createForm([
-      { label: 'Margin top', name: 'marginTop' }, createListBox('Unit', 'marginTopUnit', units.getUnitValues()),
-      { label: 'Margin right', name: 'marginRight' }, createListBox('Unit', 'marginRightUnit', units.getUnitValues()),
-      { label: 'Margin bottom', name: 'marginBottom' }, createListBox('Unit', 'marginBottomUnit', units.getUnitValues()),
-      { label: 'Margin left', name: 'marginLeft' }, createListBox('Unit', 'marginLeftUnit', units.getUnitValues())
-    ])])
-  ])
-}
-
-/**
- * @function
- * @param
- * @returns
- */
-function createGeneralTab () {
-  return createTab('General', [
-    createFieldset('Paragraph', [createForm([
-      {label: 'Indent', name: 'indent'}, createUnitSelectBox('indentUnit'),
-      {label: 'Line spacing', name: 'linespacing'}, createUnitSelectBox('linespacingUnit')
-    ])])
-  ])
 }
 
 /**

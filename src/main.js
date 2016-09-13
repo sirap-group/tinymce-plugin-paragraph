@@ -11,9 +11,8 @@
  * @see Contributing: http://www.tinymce.com/contributing
  */
 
-// var path = require('path')
-
-var uiComponents = require('./lib/ui/components')
+// var uiComponents = require('./lib/ui/components')
+var mainWindow = require('./lib/ui/main-window')
 var eventHandlers = require('./lib/event-handlers')
 
 var tinymce = window.tinymce
@@ -29,6 +28,6 @@ function ParagraphPlugin (editor) {
     separator: 'before',
     text: 'Paragraphe',
     context: 'format',
-    onclick: uiComponents.openMainWinFunction(editor)
+    onclick: mainWindow.openMainWinFunction(editor)
   })
 }

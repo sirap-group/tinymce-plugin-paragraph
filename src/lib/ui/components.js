@@ -1,48 +1,69 @@
 'use strict'
 
-// var path = require('path')
 var uiHelpers = require('./helpers')
-var eventHandlers = require('../event-handlers')
+var units = require('../units')
 
 module.exports = {
-  openMainWinFunction: openMainWinFunction
+  createBordersTab: createBordersTab,
+  createSpacingTab: createSpacingTab,
+  createGeneralTab: createGeneralTab
 }
 
 /**
- * Make the openMainWin function as a closure
- * @method
- * @param {Editor} editor The tinymce active editor instance
- * @returns {function} openMainWin The openMainWin closure function
+ * @function
+ * @param
+ * @returns
  */
-function openMainWinFunction (editor) {
-  return openMainWin
+function createBordersTab (editor) {
+  return uiHelpers.createTab('Borders', [{
+    type: 'form',
+    labelGapCalc: false,
+    padding: 0,
+    layout: 'grid',
+    columns: 2,
+    defaults: {
+      type: 'textbox',
+      maxWidth: 100
+    },
+    items: [
+      {label: 'Border width', name: 'borderwidth'},
+      {label: 'Border color', name: 'bordercolor', type: 'colorbox', onaction: uiHelpers.createColorPickAction(editor)}
+    ]
+  }])
+}
 
-  /**
-   * Open the main paragraph properties window
-   * @function
-   * @inner
-   * @returns {undefined}
-   */
-  function openMainWin () {
-    var generalTab = uiHelpers.createGeneralTab()
-    var spacingsTab = uiHelpers.createSpacingTab()
-    var bordersTab = uiHelpers.createBordersTab(editor)
-    var paragraph = editor.dom.getParent(editor.selection.getStart(), 'p')
-    // console.log('paragraph',paragraph)
+/**
+ * @function
+ * @param
+ * @returns
+ */
+function createSpacingTab () {
+  return uiHelpers.createTab('Spacing', [
+    uiHelpers.createFieldset('Padding', [uiHelpers.createForm([
+      { label: 'Padding top', name: 'paddingTop' }, uiHelpers.createListBox('Unit', 'paddingTopUnit', units.getUnitValues()),
+      { label: 'Padding right', name: 'paddingRight' }, uiHelpers.createListBox('Unit', 'paddingRightUnit', units.getUnitValues()),
+      { label: 'Padding bottom', name: 'paddingBottom' }, uiHelpers.createListBox('Unit', 'paddingBottomUnit', units.getUnitValues()),
+      { label: 'Padding left', name: 'paddingLeft' }, uiHelpers.createListBox('Unit', 'paddingLeftUnit', units.getUnitValues())
+    ])]),
+    uiHelpers.createFieldset('Margin', [uiHelpers.createForm([
+      { label: 'Margin top', name: 'marginTop' }, uiHelpers.createListBox('Unit', 'marginTopUnit', units.getUnitValues()),
+      { label: 'Margin right', name: 'marginRight' }, uiHelpers.createListBox('Unit', 'marginRightUnit', units.getUnitValues()),
+      { label: 'Margin bottom', name: 'marginBottom' }, uiHelpers.createListBox('Unit', 'marginBottomUnit', units.getUnitValues()),
+      { label: 'Margin left', name: 'marginLeft' }, uiHelpers.createListBox('Unit', 'marginLeftUnit', units.getUnitValues())
+    ])])
+  ])
+}
 
-    editor.windowManager.open({
-      bodyType: 'tabpanel',
-      title: 'Paragraph properties',
-      body: [ generalTab, spacingsTab, bordersTab ],
-      data: {
-        indent: editor.dom.getStyle(paragraph, 'text-indent'),
-        linespacing: editor.dom.getStyle(paragraph, 'line-height'),
-        padding: editor.dom.getStyle(paragraph, 'padding'),
-        margin: editor.dom.getStyle(paragraph, 'margin'),
-        borderwidth: editor.dom.getStyle(paragraph, 'border-width'),
-        bordercolor: editor.dom.getStyle(paragraph, 'border-color')
-      },
-      onsubmit: eventHandlers.processAllChangesOnMainWinSubmit(editor, paragraph)
-    })
-  }
+/**
+ * @function
+ * @param
+ * @returns
+ */
+function createGeneralTab () {
+  return uiHelpers.createTab('General', [
+    uiHelpers.createFieldset('Paragraph', [uiHelpers.createForm([
+      {label: 'Indent', name: 'indent'}, uiHelpers.createUnitSelectBox('indentUnit'),
+      {label: 'Line spacing', name: 'linespacing'}, uiHelpers.createUnitSelectBox('linespacingUnit')
+    ])])
+  ])
 }

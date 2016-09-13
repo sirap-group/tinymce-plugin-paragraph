@@ -42,14 +42,27 @@ function processAllChangesOnMainWinSubmit (editor, paragraph) {
    * @returns {undefined}
    */
   function processAllChanges (evt) {
-    editor.dom.setStyle(paragraph, 'text-indent', evt.data.indent)
-    editor.dom.setStyle(paragraph, 'line-height', evt.data.linespacing)
-    editor.dom.setStyle(paragraph, 'padding', evt.data.padding)
-    editor.dom.setStyle(paragraph, 'margin', evt.data.margin)
-    editor.dom.setStyle(paragraph, 'border-width', evt.data.borderwidth)
-    if (evt.data.borderwidth) {
-      editor.dom.setStyle(paragraph, 'border-style', 'solid')
+    console.log('evt.data', evt.data)
+    if (evt.data.indent) {
+      editor.dom.setStyle(paragraph, 'text-indent', evt.data.indent + evt.data.indentUnit)
     }
-    editor.dom.setStyle(paragraph, 'border-color', evt.data.bordercolor)
+    if (evt.data.linespacing) {
+      editor.dom.setStyle(paragraph, 'line-height', evt.data.linespacing + evt.data.linespacingUnit)
+    }
+    if (evt.data.padding) {
+      editor.dom.setStyle(paragraph, 'padding', evt.data.padding + evt.data.paddingUnit)
+    }
+    if (evt.data.margin) {
+      editor.dom.setStyle(paragraph, 'margin', evt.data.margin + evt.data.marginUnit)
+    }
+    if (evt.data.borderwidth) {
+      editor.dom.setStyle(paragraph, 'border-width', evt.data.borderwidth + evt.data.borderwidthUnit)
+    }
+    if (evt.data.borderStyle) {
+      editor.dom.setStyle(paragraph, 'border-style', evt.data.borderStyle)
+    }
+    if (evt.data.bordercolor) {
+      editor.dom.setStyle(paragraph, 'border-color', evt.data.bordercolor)
+    }
   }
 }
