@@ -55,15 +55,31 @@ function createSpacingTab () {
 }
 
 /**
- * @function
- * @param
- * @returns
+ * Create the general tab component that show form inputs for:
+ * - text indent,
+ * - line spacing
+ * @method
+ * @returns {TabPanel} generalTab
  */
 function createGeneralTab () {
-  return uiHelpers.createTab('General', [
-    uiHelpers.createFieldset('Paragraph', [uiHelpers.createForm([
-      {label: 'Indent', name: 'indent'}, uiHelpers.createUnitSelectBox('indentUnit'),
-      {label: 'Line spacing', name: 'linespacing'}, uiHelpers.createUnitSelectBox('linespacingUnit')
-    ])])
+  // text indent form inputs
+  var textIndentInput = {label: 'Text indent', name: 'indent'}
+  var textIndentUnitSelect = uiHelpers.createUnitSelectBox('indentUnit')
+
+  // line spacing form inputs
+  var lineSpacingInput = {label: 'Line spacing', name: 'lineSpacing'}
+  var lineSpacingUnitSelect = uiHelpers.createUnitSelectBox('lineSpacingUnit')
+
+  // paragraph fieldset form
+  var paragraphFieldSetForm = uiHelpers.createForm([
+    textIndentInput, textIndentUnitSelect,
+    lineSpacingInput, lineSpacingUnitSelect
   ])
+
+  // paragraph fieldset
+  var paragraphFieldSet = uiHelpers.createFieldset('Paragraph', [paragraphFieldSetForm])
+  // general tab
+  var generalTab = uiHelpers.createTab('General', [paragraphFieldSet])
+
+  return generalTab
 }
