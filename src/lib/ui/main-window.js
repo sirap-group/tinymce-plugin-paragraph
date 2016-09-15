@@ -1,8 +1,11 @@
 'use strict'
 
-// var uiHelpers = require('./helpers')
-var uiComponents = require('./components')
 var eventHandlers = require('../event-handlers')
+var units = require('../units')
+var uiComponents = require('./components')
+// var uiHelpers = require('./helpers')
+
+var $ = window.jQuery
 
 module.exports = {
   openMainWinFunction: openMainWinFunction
@@ -24,25 +27,49 @@ function openMainWinFunction (editor) {
    * @returns {undefined}
    */
   function openMainWin () {
-    var generalTab = uiComponents.createGeneralTab()
-    var spacingsTab = uiComponents.createSpacingTab()
-    var bordersTab = uiComponents.createBordersTab(editor)
     var paragraph = editor.dom.getParent(editor.selection.getStart(), 'p')
-    // console.log('paragraph',paragraph)
+    var paragraphStyleData = {}
+
+    var valuesWithUnits = [
+      ['text-indent', 'indent'],
+      ['line-height', 'lineHeight'],
+      ['padding-top', 'paddingTop'],
+      ['padding-right', 'paddingRight'],
+      ['padding-bottom', 'paddingBottom'],
+      ['padding-left', 'paddingLeft'],
+      ['margin-top', 'marginTop'],
+      ['margin-right', 'marginRight'],
+      ['margin-bottom', 'marginBottom'],
+      ['margin-left', 'marginLeft'],
+      ['border-width', 'borderWidth']
+    ]
+    $.each(valuesWithUnits, function setEachFormValueWithUnit (i, item) {
+      var defaultValue = (item.length === 3) ? item[2] : undefined
+      units.setFormValueWithUnit(editor.dom, paragraph, paragraphStyleData, item[0], item[1], defaultValue)
+    })
+
+    // var defaultBorderStyleItem = uiHelpers.createListBoxItem('none')
+    var valuesWithoutUnits = [
+      ['border-style', 'borderStyle', 'none'],
+      ['border-color', 'borderColor', 'green']
+    ]
+    $.each(valuesWithoutUnits, function setEachFormValueWithoutUnit (i, item) {
+      var defaultValue = (item.length === 3) ? item[2] : undefined
+      units.setFormValueWithoutUnit(editor.dom, paragraph, paragraphStyleData, item[0], item[1], defaultValue)
+    })
+
+    var generalTab = uiComponents.createGeneralTab(paragraphStyleData)
+    var spacingsTab = uiComponents.createSpacingTab(paragraphStyleData)
+    var bordersTab = uiComponents.createBordersTab(editor, paragraphStyleData)
+
+    console.log('paragraph', paragraph)
+    console.log('paragraphStyleData', paragraphStyleData)
 
     editor.windowManager.open({
       bodyType: 'tabpanel',
       title: 'Paragraph properties',
       body: [ generalTab, spacingsTab, bordersTab ],
-      data: {
-        indent: editor.dom.getStyle(paragraph, 'text-indent'),
-        lineSpacing: editor.dom.getStyle(paragraph, 'line-height'),
-        padding: editor.dom.getStyle(paragraph, 'padding'),
-        margin: editor.dom.getStyle(paragraph, 'margin'),
-        borderStyle: editor.dom.getStyle(paragraph, 'border-style'),
-        borderWidth: editor.dom.getStyle(paragraph, 'border-width'),
-        borderColor: editor.dom.getStyle(paragraph, 'border-color')
-      },
+      data: paragraphStyleData,
       onsubmit: eventHandlers.processAllChangesOnMainWinSubmit(editor, paragraph)
     })
   }
