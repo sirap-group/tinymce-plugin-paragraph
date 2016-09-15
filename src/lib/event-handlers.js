@@ -39,13 +39,12 @@ function processAllChangesOnMainWinSubmit (editor, paragraph) {
    * Process all changes on the properties of the selected paragraph
    * @function
    * @inner
-   * @param {Event} evt The event object
    * @returns {undefined}
    */
-  function processAllChanges (evt) {
     console.log('evt.data', evt.data)
     if (evt.data.indent) {
       editor.dom.setStyle(paragraph, 'text-indent', evt.data.indent + evt.data.indentUnit)
+  function processAllChanges () {
     }
     if (evt.data.lineSpacing) {
       editor.dom.setStyle(paragraph, 'line-height', evt.data.lineSpacing + evt.data.lineSpacingUnit)
