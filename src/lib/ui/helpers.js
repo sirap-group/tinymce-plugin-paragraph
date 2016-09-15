@@ -19,7 +19,9 @@ module.exports = {
   createTab: createTab,
   createFieldset: createFieldset,
   createForm: createForm,
-  createListBox: createListBox
+  createListBox: createListBox,
+  createListBoxItem: createListBoxItem,
+  createColorPicker: createColorPicker
 }
 
 /**
@@ -125,5 +127,38 @@ function createListBox (label, name, values) {
     minWidth: 90,
     maxWidth: null,
     values: values
+  }
+}
+
+/**
+ * Create an item for createListBox() values array
+ * @param {string} text The text shown for the item
+ * @param {string|number} value A value for the item
+ * @return {ListBoxItem}
+ */
+function createListBoxItem (text, value) {
+  if (value === undefined) {
+    value = text
+  }
+  var item = {
+    text: text,
+    value: value
+  }
+  return item
+}
+
+/**
+ * Create a color picker
+ * @method
+ * @param {string} label The label for the color picker
+ * @param {string} name The name to identify the color picker in the form set
+ * @returns {ColorPicker} colorPicker The new color picker
+ */
+function createColorPicker (label, name, callback) {
+  return {
+    type: 'colorbox',
+    label: label,
+    name: name,
+    onaction: callback
   }
 }
