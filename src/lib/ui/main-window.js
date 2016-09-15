@@ -62,9 +62,6 @@ function openMainWinFunction (editor) {
     var spacingsTab = uiComponents.createSpacingTab(paragraphStyleData)
     var bordersTab = uiComponents.createBordersTab(editor, paragraphStyleData)
 
-    console.log('paragraph', paragraph)
-    console.log('paragraphStyleData', paragraphStyleData)
-
     editor.windowManager.open({
       bodyType: 'tabpanel',
       title: 'Paragraph properties',
