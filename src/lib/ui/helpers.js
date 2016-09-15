@@ -84,9 +84,12 @@ function createTab (title, fieldsets, direction) {
 }
 
 /**
- * @function
- * @param
- * @returns
+ * Create a field set
+ * @method
+ * @param {string} title The field set title
+ * @param {array<object>} items The field items to put in the field set
+ * @param {number} [maxWidth] The maximum with for the fieldset, in pixels
+ * @returns {Fieldset} fieldset The new field set
  */
 function createFieldset (title, items, maxWidth) {
   var fieldset = {
