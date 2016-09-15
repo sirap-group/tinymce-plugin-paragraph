@@ -31,7 +31,7 @@ function openMainWinFunction (editor) {
     var paragraphStyleData = {}
 
     var valuesWithUnits = [
-      ['text-indent', 'indent'],
+      ['text-indent', 'textIndent'],
       ['line-height', 'lineHeight'],
       ['padding-top', 'paddingTop'],
       ['padding-right', 'paddingRight'],

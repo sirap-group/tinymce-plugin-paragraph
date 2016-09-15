@@ -122,8 +122,8 @@ function createSpacingTab () {
  */
 function createGeneralTab () {
   // text indent form inputs
-  var textIndentTextBox = uiHelpers.createTextBox('Text indent', 'indent')
-  var textIndentUnitSelect = uiHelpers.createUnitSelectBox('indentUnit', 'mm')
+  var textIndentTextBox = uiHelpers.createTextBox('Text indent', 'textIndent')
+  var textIndentUnitSelect = uiHelpers.createUnitSelectBox('textIndentUnit', 'mm')
 
   // line spacing form inputs
   var lineSpacingTextBox = uiHelpers.createTextBox('Line spacing', 'lineSpacing')

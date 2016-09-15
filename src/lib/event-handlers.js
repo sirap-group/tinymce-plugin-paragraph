@@ -48,8 +48,8 @@ function processAllChangesOnMainWinSubmit (editor, paragraph) {
     // process all changes in a undo/redo transaction
     editor.undoManager.transact(function () {
       // set text indent
-      if (data.indent) {
-        editor.dom.setStyle(paragraph, 'text-indent', data.indent + data.indentUnit)
+      if (data.textIndent) {
+        editor.dom.setStyle(paragraph, 'text-indent', data.textIndent + data.textIndentUnit)
       }
 
       // set line spacing
