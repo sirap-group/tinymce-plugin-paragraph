@@ -2,7 +2,6 @@
 
 var uiHelpers = require('./helpers')
 var eventHandlers = require('../event-handlers')
-var units = require('../units')
 
 module.exports = {
   createBordersTab: createBordersTab,
@@ -55,25 +54,63 @@ function createBordersTab (editor) {
 }
 
 /**
- * @function
- * @param
- * @returns
+* Create the spacing tab
+ * @method
+ * @static
+ * @returns {Tab} spacingTab The new spacing tab
  */
 function createSpacingTab () {
-  return uiHelpers.createTab('Spacing', [
-    uiHelpers.createFieldset('Padding', [uiHelpers.createForm([
-      { label: 'Padding top', name: 'paddingTop' }, uiHelpers.createListBox('Unit', 'paddingTopUnit', units.getUnitValues()),
-      { label: 'Padding right', name: 'paddingRight' }, uiHelpers.createListBox('Unit', 'paddingRightUnit', units.getUnitValues()),
-      { label: 'Padding bottom', name: 'paddingBottom' }, uiHelpers.createListBox('Unit', 'paddingBottomUnit', units.getUnitValues()),
-      { label: 'Padding left', name: 'paddingLeft' }, uiHelpers.createListBox('Unit', 'paddingLeftUnit', units.getUnitValues())
-    ])]),
-    uiHelpers.createFieldset('Margin', [uiHelpers.createForm([
-      { label: 'Margin top', name: 'marginTop' }, uiHelpers.createListBox('Unit', 'marginTopUnit', units.getUnitValues()),
-      { label: 'Margin right', name: 'marginRight' }, uiHelpers.createListBox('Unit', 'marginRightUnit', units.getUnitValues()),
-      { label: 'Margin bottom', name: 'marginBottom' }, uiHelpers.createListBox('Unit', 'marginBottomUnit', units.getUnitValues()),
-      { label: 'Margin left', name: 'marginLeft' }, uiHelpers.createListBox('Unit', 'marginLeftUnit', units.getUnitValues())
-    ])])
+  // padding top
+  var paddingTopTextBox = uiHelpers.createTextBox('Padding top', 'paddingTop')
+  var paddingTopUnitSelect = uiHelpers.createUnitSelectBox('paddingTopUnit', 'mm')
+  // padding right
+  var paddingRightTextBox = uiHelpers.createTextBox('Padding right', 'paddingRight')
+  var paddingRightUnitSelect = uiHelpers.createUnitSelectBox('paddingRightUnit', 'mm')
+  // padding bottom
+  var paddingBottomTextBox = uiHelpers.createTextBox('Padding bottom', 'paddingBottom')
+  var paddingBottomUnitSelect = uiHelpers.createUnitSelectBox('paddingBottomUnit', 'mm')
+  // padding left
+  var paddingLeftTextBox = uiHelpers.createTextBox('Padding left', 'paddingLeft')
+  var paddingLeftUnitSelect = uiHelpers.createUnitSelectBox('paddingLeftUnit', 'mm')
+
+  // margin top
+  var marginTopTextBox = uiHelpers.createTextBox('Margin top', 'marginTop')
+  var marginTopUnitSelect = uiHelpers.createUnitSelectBox('marginTopUnit', 'mm')
+  // margin right
+  var marginRightTextBox = uiHelpers.createTextBox('Margin right', 'marginRight')
+  var marginRightUnitSelect = uiHelpers.createUnitSelectBox('marginRightUnit', 'mm')
+  // margin bottom
+  var marginBottomTextBox = uiHelpers.createTextBox('Margin bottom', 'marginBottom')
+  var marginBottomUnitSelect = uiHelpers.createUnitSelectBox('marginBottomUnit', 'mm')
+  // margin left
+  var marginLeftTextBox = uiHelpers.createTextBox('Margin left', 'marginLeft')
+  var marginLeftUnitSelect = uiHelpers.createUnitSelectBox('marginLeftUnit', 'mm')
+
+  // padding form
+  var paddingForm = uiHelpers.createForm([
+    paddingTopTextBox, paddingTopUnitSelect,
+    paddingRightTextBox, paddingRightUnitSelect,
+    paddingBottomTextBox, paddingBottomUnitSelect,
+    paddingLeftTextBox, paddingLeftUnitSelect
   ])
+
+  // margin form
+  var marginForm = uiHelpers.createForm([
+    marginTopTextBox, marginTopUnitSelect,
+    marginRightTextBox, marginRightUnitSelect,
+    marginBottomTextBox, marginBottomUnitSelect,
+    marginLeftTextBox, marginLeftUnitSelect
+  ])
+
+  // padding fieldset
+  var paddingFieldSet = uiHelpers.createFieldset('Padding', [paddingForm])
+  // margin fieldset
+  var marginFieldSet = uiHelpers.createFieldset('Margins', [marginForm])
+
+  // spacing tab
+  var spacingTab = uiHelpers.createTab('Spacing', [paddingFieldSet, marginFieldSet])
+
+  return spacingTab
 }
 
 /**
