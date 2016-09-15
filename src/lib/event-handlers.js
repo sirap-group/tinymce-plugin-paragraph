@@ -43,7 +43,6 @@ function processAllChangesOnMainWinSubmit (editor, paragraph) {
    */
   function processAllChanges () {
     var data = this.toJSON()
-    console.log('data', data)
 
     editor.undoManager.transact(function () {
       if (data.indent) {
