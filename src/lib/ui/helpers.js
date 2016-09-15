@@ -88,12 +88,16 @@ function createTab (title, fieldsets, direction) {
  * @param
  * @returns
  */
-function createFieldset (title, items) {
-  return {
+function createFieldset (title, items, maxWidth) {
+  var fieldset = {
     type: 'fieldset',
     title: title,
     items: items
   }
+  if (maxWidth) {
+    fieldset.maxWidth = 500
+  }
+  return fieldset
 }
 
 /**
