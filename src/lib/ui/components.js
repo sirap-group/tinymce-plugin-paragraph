@@ -10,9 +10,10 @@ module.exports = {
 }
 
 /**
- * @function
- * @param
- * @returns
+ * Create the borders tab
+ * @method
+ * @param {Editor} editor The tinymce active editor instance
+ * @returns {Tab} borderTab The new border tab
  */
 function createBordersTab (editor) {
   return uiHelpers.createTab('Borders', [{
