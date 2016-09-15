@@ -1,6 +1,7 @@
 'use strict'
 
 var uiHelpers = require('./helpers')
+var eventHandlers = require('../event-handlers')
 var units = require('../units')
 
 module.exports = {
@@ -16,21 +17,41 @@ module.exports = {
  * @returns {Tab} borderTab The new border tab
  */
 function createBordersTab (editor) {
-  return uiHelpers.createTab('Borders', [{
-    type: 'form',
-    labelGapCalc: false,
-    padding: 0,
-    layout: 'grid',
-    columns: 2,
-    defaults: {
-      type: 'textbox',
-      maxWidth: 100
-    },
-    items: [
-      {label: 'Border width', name: 'borderwidth'},
-      {label: 'Border color', name: 'bordercolor', type: 'colorbox', onaction: uiHelpers.createColorPickAction(editor)}
-    ]
-  }])
+  // border width form inputs
+  var borderWidthTextBox = uiHelpers.createTextBox('Border width', 'borderWidth')
+  var borderWidthUnitSelect = uiHelpers.createUnitSelectBox('borderWidthUnit', 'mm')
+
+  // border style
+  var borderStyleItemNone = uiHelpers.createListBoxItem('none')
+  var borderStyleItemHidden = uiHelpers.createListBoxItem('hidden')
+  var borderStyleItemDotted = uiHelpers.createListBoxItem('dotted')
+  var borderStyleItemDashed = uiHelpers.createListBoxItem('dashed')
+  var borderStyleItemSolid = uiHelpers.createListBoxItem('solid')
+  var borderStyleItemDouble = uiHelpers.createListBoxItem('double')
+  var borderStyleItemGroove = uiHelpers.createListBoxItem('groove')
+  var borderStyleItemRidge = uiHelpers.createListBoxItem('ridge')
+  var borderStyleItemInset = uiHelpers.createListBoxItem('inset')
+  var borderStyleItemOutset = uiHelpers.createListBoxItem('outset')
+  var borderStyleValues = [
+    borderStyleItemNone, borderStyleItemHidden, borderStyleItemDotted,
+    borderStyleItemDashed, borderStyleItemSolid, borderStyleItemDouble,
+    borderStyleItemGroove, borderStyleItemRidge, borderStyleItemInset,
+    borderStyleItemOutset
+  ]
+  var borderStyleListBox = uiHelpers.createListBox('Border style', 'borderStyle', borderStyleValues, borderStyleItemNone)
+
+  // border color picker
+  var borderColorPicker = uiHelpers.createColorPicker('Border color', 'borderColor', eventHandlers.createColorPickAction(editor))
+
+  // create form
+  var borderForm = uiHelpers.createForm([ borderWidthTextBox, borderWidthUnitSelect, borderStyleListBox, borderColorPicker ])
+  // create field set
+  var borderFieldset = uiHelpers.createFieldset('', [ borderForm ])
+
+  // create border tab
+  var borderTab = uiHelpers.createTab('Borders', borderFieldset)
+
+  return borderTab
 }
 
 /**
