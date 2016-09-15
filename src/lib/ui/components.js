@@ -126,13 +126,13 @@ function createGeneralTab () {
   var textIndentUnitSelect = uiHelpers.createUnitSelectBox('textIndentUnit', 'mm')
 
   // line spacing form inputs
-  var lineSpacingTextBox = uiHelpers.createTextBox('Line spacing', 'lineSpacing')
+  var lineHeightTextBox = uiHelpers.createTextBox('Line height', 'lineHeight')
   var lineSpacingUnitSelect = uiHelpers.createUnitSelectBox('lineSpacingUnit', 'mm')
 
   // paragraph fieldset form
   var paragraphForm = uiHelpers.createForm([
     textIndentTextBox, textIndentUnitSelect,
-    lineSpacingTextBox, lineSpacingUnitSelect
+    lineHeightTextBox, lineSpacingUnitSelect
   ])
 
   // paragraph fieldset

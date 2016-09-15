@@ -52,9 +52,9 @@ function processAllChangesOnMainWinSubmit (editor, paragraph) {
         editor.dom.setStyle(paragraph, 'text-indent', data.textIndent + data.textIndentUnit)
       }
 
-      // set line spacing
-      if (data.lineSpacing) {
-        editor.dom.setStyle(paragraph, 'line-height', data.lineSpacing + data.lineSpacingUnit)
+      // set line height
+      if (data.lineHeight) {
+        editor.dom.setStyle(paragraph, 'line-height', data.lineHeight + data.lineHeightUnit)
       }
 
       // set padding style
