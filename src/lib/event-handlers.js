@@ -42,39 +42,38 @@ function processAllChangesOnMainWinSubmit (editor, paragraph) {
    * @returns {undefined}
    */
   function processAllChanges () {
+    // get form data
     var data = this.toJSON()
 
+    // process all changes in a undo/redo transaction
     editor.undoManager.transact(function () {
+      // set text indent
       if (data.indent) {
         editor.dom.setStyle(paragraph, 'text-indent', data.indent + data.indentUnit)
       }
+
+      // set line spacing
       if (data.lineSpacing) {
         editor.dom.setStyle(paragraph, 'line-height', data.lineSpacing + data.lineSpacingUnit)
       }
-      if (data.paddingTop) {
-        editor.dom.setStyle(paragraph, 'padding-top', data.paddingTop + data.paddingTopUnit)
-      }
-      if (data.paddingRight) {
-        editor.dom.setStyle(paragraph, 'padding-right', data.paddingRight + data.paddingRightUnit)
-      }
-      if (data.paddingBottom) {
-        editor.dom.setStyle(paragraph, 'padding-bottom', data.paddingBottom + data.paddingBottomUnit)
-      }
-      if (data.paddingLeft) {
-        editor.dom.setStyle(paragraph, 'padding-left', data.paddingLeft + data.paddingLeftUnit)
-      }
-      if (data.marginTop) {
-        editor.dom.setStyle(paragraph, 'margin-top', data.marginTop + data.marginTopUnit)
-      }
-      if (data.marginRight) {
-        editor.dom.setStyle(paragraph, 'margin-right', data.marginRight + data.marginRightUnit)
-      }
-      if (data.marginBottom) {
-        editor.dom.setStyle(paragraph, 'margin-bottom', data.marginBottom + data.marginBottomUnit)
-      }
-      if (data.marginLeft) {
-        editor.dom.setStyle(paragraph, 'margin-left', data.marginLeft + data.marginLeftUnit)
-      }
+
+      // set padding style
+      var padding = ''
+      padding += String((data.paddingTop) ? data.paddingTop + data.paddingTopUnit : '0').concat(' ')
+      padding += String((data.paddingRight) ? data.paddingRight + data.paddingRightUnit : '0').concat(' ')
+      padding += String((data.paddingBottom) ? data.paddingBottom + data.paddingBottomUnit : '0').concat(' ')
+      padding += String((data.paddingLeft) ? data.paddingLeft + data.paddingLeftUnit : '0')
+      editor.dom.setStyle(paragraph, 'padding', padding)
+
+      // set margin style
+      var margin = ''
+      margin += String((data.marginTop) ? data.marginTop + data.marginTopUnit : '0').concat(' ')
+      margin += String((data.marginRight) ? data.marginRight + data.marginRightUnit : '0').concat(' ')
+      margin += String((data.marginBottom) ? data.marginBottom + data.marginBottomUnit : '0').concat(' ')
+      margin += String((data.marginLeft) ? data.marginLeft + data.marginLeftUnit : '0')
+      editor.dom.setStyle(paragraph, 'margin', margin)
+
+      // set borders style
       if (data.borderWidth) {
         editor.dom.setStyle(paragraph, 'border-width', data.borderWidth + data.borderWidthUnit)
       }
