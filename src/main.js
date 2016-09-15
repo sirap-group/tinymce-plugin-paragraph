@@ -26,7 +26,7 @@ function ParagraphPlugin (editor) {
 
   editor.addMenuItem('paragraph', {
     separator: 'before',
-    text: 'Paragraphe',
+    text: 'Paragraph properties',
     context: 'format',
     onclick: mainWindow.openMainWinFunction(editor)
   })
