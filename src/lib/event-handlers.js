@@ -4,7 +4,8 @@ var $ = window.jQuery
 
 module.exports = {
   ensureParagraphWrapsTextNodeOnChange: ensureParagraphWrapsTextNodeOnChange,
-  processAllChangesOnMainWinSubmit: processAllChangesOnMainWinSubmit
+  processAllChangesOnMainWinSubmit: processAllChangesOnMainWinSubmit,
+  createColorPickAction: createColorPickAction
 }
 
 function ensureParagraphWrapsTextNodeOnChange (editor) {
@@ -64,5 +65,34 @@ function processAllChangesOnMainWinSubmit (editor, paragraph) {
     if (evt.data.bordercolor) {
       editor.dom.setStyle(paragraph, 'border-color', evt.data.bordercolor)
     }
+  }
+}
+
+/**
+ * @function
+ * @param
+ * @returns
+ */
+function createColorPickAction (editor) {
+  var colorPickerCallback = editor.settings.color_picker_callback
+  if (colorPickerCallback) {
+    return colorPickAction
+  }
+
+  /**
+   * @function
+   * @inner
+   */
+  function colorPickAction () {
+    var value = this.value()
+    colorPickerCallback.call(editor, setValueAndFireChange.bind(this), value)
+  }
+
+  /**
+   * @function
+   * @inner
+   */
+  function setValueAndFireChange (value) {
+    this.value(value).fire('change')
   }
 }

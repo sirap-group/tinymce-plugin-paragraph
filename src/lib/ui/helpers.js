@@ -15,7 +15,6 @@
 
 module.exports = {
   createTextBox: createTextBox,
-  createColorPickAction: createColorPickAction,
   createUnitSelectBox: createUnitSelectBox,
   createTab: createTab,
   createFieldset: createFieldset,
@@ -38,26 +37,6 @@ function createTextBox (label, name) {
 }
 
 /**
- * @function
- * @param
- * @returns
- */
-function createColorPickAction (editor) {
-  var colorPickerCallback = editor.settings.color_picker_callback
-  if (colorPickerCallback) {
-    return function () {
-      var self = this
-      colorPickerCallback.call(
-        editor,
-        function (value) {
-          self.value(value).fire('change')
-        },
-        self.value()
-      )
-    }
-  }
-}
-
 /**
  * @function
  * @param
