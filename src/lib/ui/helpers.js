@@ -14,53 +14,52 @@
 'use strict'
 
 module.exports = {
-  createColorPickAction: createColorPickAction,
+  createTextBox: createTextBox,
   createUnitSelectBox: createUnitSelectBox,
   createTab: createTab,
   createFieldset: createFieldset,
   createForm: createForm,
-  createListBox: createListBox
+  createListBox: createListBox,
+  createListBoxItem: createListBoxItem,
+  createColorPicker: createColorPicker
 }
 
 /**
- * @function
- * @param
- * @returns
+ * Create a simple text box
+ * @method
+ * @param {string} label The textBox label
+ * @param {string} name The textBox name
+ * @returns {TextBox} textBox The new textBox
  */
-function createColorPickAction (editor) {
-  var colorPickerCallback = editor.settings.color_picker_callback
-  if (colorPickerCallback) {
-    return function () {
-      var self = this
-      colorPickerCallback.call(
-        editor,
-        function (value) {
-          self.value(value).fire('change')
-        },
-        self.value()
-      )
-    }
+function createTextBox (label, name) {
+  return {
+    label: label,
+    name: name
   }
 }
 
 /**
- * @function
- * @param
- * @returns
+ * Create a select box to select a length unit
+ * @method
+ * @param {string} inputName - A name to identify the input in the form
+ * @param {string} [defaultUnit=pt] - A default unit in (`pt`, `mm`, or `cm`).
+ * @returns {SelectBox} unitSelectBox The new unit select box.
  */
-function createUnitSelectBox (inputName) {
+function createUnitSelectBox (inputName, defaultUnit) {
+  defaultUnit = defaultUnit || 'pt'
   return {
     label: 'Unit',
     name: inputName,
     type: 'listbox',
-    text: 'None',
     minWidth: 90,
-    maxWidth: null,
+    maxWidth: 90,
     values: [
       {text: 'pt', value: 'pt'},
       {text: 'cm', value: 'cm'},
       {text: 'mm', value: 'mm'}
-    ]
+    ],
+    text: defaultUnit,
+    value: defaultUnit
   }
 }
 
@@ -85,16 +84,23 @@ function createTab (title, fieldsets, direction) {
 }
 
 /**
- * @function
- * @param
- * @returns
+ * Create a field set
+ * @method
+ * @param {string} title The field set title
+ * @param {array<object>} items The field items to put in the field set
+ * @param {number} [maxWidth] The maximum with for the fieldset, in pixels
+ * @returns {Fieldset} fieldset The new field set
  */
-function createFieldset (title, items) {
-  return {
+function createFieldset (title, items, maxWidth) {
+  var fieldset = {
     type: 'fieldset',
     title: title,
     items: items
   }
+  if (maxWidth) {
+    fieldset.maxWidth = 500
+  }
+  return fieldset
 }
 
 /**
@@ -118,11 +124,15 @@ function createForm (items) {
 }
 
 /**
- * @function
- * @param
+ * @method
+ * @static
+ * @param {string} label The label for the list box
+ * @param {string} name The name of the list box to identify it in the form
+ * @param {array<ListBoxItem>} values An array of list box items
+ * @param {ListBoxItem} [defaultItem=N/A] An item to select as default value
  * @returns
  */
-function createListBox (label, name, values) {
+function createListBox (label, name, values, defaultItem) {
   return {
     label: label,
     name: name,
@@ -131,5 +141,38 @@ function createListBox (label, name, values) {
     minWidth: 90,
     maxWidth: null,
     values: values
+  }
+}
+
+/**
+ * Create an item for createListBox() values array
+ * @param {string} text The text shown for the item
+ * @param {string|number} value A value for the item
+ * @return {ListBoxItem}
+ */
+function createListBoxItem (text, value) {
+  if (value === undefined) {
+    value = text
+  }
+  var item = {
+    text: text,
+    value: value
+  }
+  return item
+}
+
+/**
+ * Create a color picker
+ * @method
+ * @param {string} label The label for the color picker
+ * @param {string} name The name to identify the color picker in the form set
+ * @returns {ColorPicker} colorPicker The new color picker
+ */
+function createColorPicker (label, name, callback) {
+  return {
+    type: 'colorbox',
+    label: label,
+    name: name,
+    onaction: callback
   }
 }

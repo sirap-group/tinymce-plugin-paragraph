@@ -4,7 +4,8 @@ var $ = window.jQuery
 
 module.exports = {
   ensureParagraphWrapsTextNodeOnChange: ensureParagraphWrapsTextNodeOnChange,
-  processAllChangesOnMainWinSubmit: processAllChangesOnMainWinSubmit
+  processAllChangesOnMainWinSubmit: processAllChangesOnMainWinSubmit,
+  createColorPickAction: createColorPickAction
 }
 
 function ensureParagraphWrapsTextNodeOnChange (editor) {
@@ -38,31 +39,79 @@ function processAllChangesOnMainWinSubmit (editor, paragraph) {
    * Process all changes on the properties of the selected paragraph
    * @function
    * @inner
-   * @param {Event} evt The event object
    * @returns {undefined}
    */
-  function processAllChanges (evt) {
-    console.log('evt.data', evt.data)
-    if (evt.data.indent) {
-      editor.dom.setStyle(paragraph, 'text-indent', evt.data.indent + evt.data.indentUnit)
-    }
-    if (evt.data.linespacing) {
-      editor.dom.setStyle(paragraph, 'line-height', evt.data.linespacing + evt.data.linespacingUnit)
-    }
-    if (evt.data.padding) {
-      editor.dom.setStyle(paragraph, 'padding', evt.data.padding + evt.data.paddingUnit)
-    }
-    if (evt.data.margin) {
-      editor.dom.setStyle(paragraph, 'margin', evt.data.margin + evt.data.marginUnit)
-    }
-    if (evt.data.borderwidth) {
-      editor.dom.setStyle(paragraph, 'border-width', evt.data.borderwidth + evt.data.borderwidthUnit)
-    }
-    if (evt.data.borderStyle) {
-      editor.dom.setStyle(paragraph, 'border-style', evt.data.borderStyle)
-    }
-    if (evt.data.bordercolor) {
-      editor.dom.setStyle(paragraph, 'border-color', evt.data.bordercolor)
-    }
+  function processAllChanges () {
+    // get form data
+    var data = this.toJSON()
+
+    // process all changes in a undo/redo transaction
+    editor.undoManager.transact(function () {
+      // set text indent
+      if (data.textIndent) {
+        editor.dom.setStyle(paragraph, 'text-indent', data.textIndent + data.textIndentUnit)
+      }
+
+      // set line height
+      if (data.lineHeight) {
+        editor.dom.setStyle(paragraph, 'line-height', data.lineHeight + data.lineHeightUnit)
+      }
+
+      // set padding style
+      var padding = ''
+      padding += String((data.paddingTop) ? data.paddingTop + data.paddingTopUnit : '0').concat(' ')
+      padding += String((data.paddingRight) ? data.paddingRight + data.paddingRightUnit : '0').concat(' ')
+      padding += String((data.paddingBottom) ? data.paddingBottom + data.paddingBottomUnit : '0').concat(' ')
+      padding += String((data.paddingLeft) ? data.paddingLeft + data.paddingLeftUnit : '0')
+      editor.dom.setStyle(paragraph, 'padding', padding)
+
+      // set margin style
+      var margin = ''
+      margin += String((data.marginTop) ? data.marginTop + data.marginTopUnit : '0').concat(' ')
+      margin += String((data.marginRight) ? data.marginRight + data.marginRightUnit : '0').concat(' ')
+      margin += String((data.marginBottom) ? data.marginBottom + data.marginBottomUnit : '0').concat(' ')
+      margin += String((data.marginLeft) ? data.marginLeft + data.marginLeftUnit : '0')
+      editor.dom.setStyle(paragraph, 'margin', margin)
+
+      // set borders style
+      if (data.borderWidth) {
+        editor.dom.setStyle(paragraph, 'border-width', data.borderWidth + data.borderWidthUnit)
+      }
+      if (data.borderStyle) {
+        editor.dom.setStyle(paragraph, 'border-style', data.borderStyle)
+      }
+      if (data.borderColor) {
+        editor.dom.setStyle(paragraph, 'border-color', data.borderColor)
+      }
+    })
+  }
+}
+
+/**
+ * @function
+ * @param
+ * @returns
+ */
+function createColorPickAction (editor) {
+  var colorPickerCallback = editor.settings.color_picker_callback
+  if (colorPickerCallback) {
+    return colorPickAction
+  }
+
+  /**
+   * @function
+   * @inner
+   */
+  function colorPickAction () {
+    var value = this.value()
+    colorPickerCallback.call(editor, setValueAndFireChange.bind(this), value)
+  }
+
+  /**
+   * @function
+   * @inner
+   */
+  function setValueAndFireChange (value) {
+    this.value(value).fire('change')
   }
 }
