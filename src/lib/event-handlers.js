@@ -45,45 +45,47 @@ function processAllChangesOnMainWinSubmit (editor, paragraph) {
     var data = this.toJSON()
     console.log('data', data)
 
-    if (data.indent) {
-      editor.dom.setStyle(paragraph, 'text-indent', data.indent + data.indentUnit)
-    }
-    if (data.lineSpacing) {
-      editor.dom.setStyle(paragraph, 'line-height', data.lineSpacing + data.lineSpacingUnit)
-    }
-    if (data.paddingTop) {
-      editor.dom.setStyle(paragraph, 'padding-top', data.paddingTop + data.paddingTopUnit)
-    }
-    if (data.paddingRight) {
-      editor.dom.setStyle(paragraph, 'padding-right', data.paddingRight + data.paddingRightUnit)
-    }
-    if (data.paddingBottom) {
-      editor.dom.setStyle(paragraph, 'padding-bottom', data.paddingBottom + data.paddingBottomUnit)
-    }
-    if (data.paddingLeft) {
-      editor.dom.setStyle(paragraph, 'padding-left', data.paddingLeft + data.paddingLeftUnit)
-    }
-    if (data.marginTop) {
-      editor.dom.setStyle(paragraph, 'margin-top', data.marginTop + data.marginTopUnit)
-    }
-    if (data.marginRight) {
-      editor.dom.setStyle(paragraph, 'margin-right', data.marginRight + data.marginRightUnit)
-    }
-    if (data.marginBottom) {
-      editor.dom.setStyle(paragraph, 'margin-bottom', data.marginBottom + data.marginBottomUnit)
-    }
-    if (data.marginLeft) {
-      editor.dom.setStyle(paragraph, 'margin-left', data.marginLeft + data.marginLeftUnit)
-    }
-    if (data.borderWidth) {
-      editor.dom.setStyle(paragraph, 'border-width', data.borderWidth + data.borderWidthUnit)
-    }
-    if (data.borderStyle) {
-      editor.dom.setStyle(paragraph, 'border-style', data.borderStyle)
-    }
-    if (data.borderColor) {
-      editor.dom.setStyle(paragraph, 'border-color', data.borderColor)
-    }
+    editor.undoManager.transact(function () {
+      if (data.indent) {
+        editor.dom.setStyle(paragraph, 'text-indent', data.indent + data.indentUnit)
+      }
+      if (data.lineSpacing) {
+        editor.dom.setStyle(paragraph, 'line-height', data.lineSpacing + data.lineSpacingUnit)
+      }
+      if (data.paddingTop) {
+        editor.dom.setStyle(paragraph, 'padding-top', data.paddingTop + data.paddingTopUnit)
+      }
+      if (data.paddingRight) {
+        editor.dom.setStyle(paragraph, 'padding-right', data.paddingRight + data.paddingRightUnit)
+      }
+      if (data.paddingBottom) {
+        editor.dom.setStyle(paragraph, 'padding-bottom', data.paddingBottom + data.paddingBottomUnit)
+      }
+      if (data.paddingLeft) {
+        editor.dom.setStyle(paragraph, 'padding-left', data.paddingLeft + data.paddingLeftUnit)
+      }
+      if (data.marginTop) {
+        editor.dom.setStyle(paragraph, 'margin-top', data.marginTop + data.marginTopUnit)
+      }
+      if (data.marginRight) {
+        editor.dom.setStyle(paragraph, 'margin-right', data.marginRight + data.marginRightUnit)
+      }
+      if (data.marginBottom) {
+        editor.dom.setStyle(paragraph, 'margin-bottom', data.marginBottom + data.marginBottomUnit)
+      }
+      if (data.marginLeft) {
+        editor.dom.setStyle(paragraph, 'margin-left', data.marginLeft + data.marginLeftUnit)
+      }
+      if (data.borderWidth) {
+        editor.dom.setStyle(paragraph, 'border-width', data.borderWidth + data.borderWidthUnit)
+      }
+      if (data.borderStyle) {
+        editor.dom.setStyle(paragraph, 'border-style', data.borderStyle)
+      }
+      if (data.borderColor) {
+        editor.dom.setStyle(paragraph, 'border-color', data.borderColor)
+      }
+    })
   }
 }
 
