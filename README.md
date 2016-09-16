@@ -1,8 +1,8 @@
 # Tinymce Plugin Paragraph
 
-[![GitHub tag](https://img.shields.io/github/tag/strongloop/express.svg?maxAge=2592000?style=plastic)](https://github.com/sirap-group/tinymce-plugin-paragraph)
-[![npm](https://img.shields.io/npm/v/npm.svg?maxAge=2592000?style=plastic)](https://www.npmjs.com/package/tinymce-plugin-paragraph)
-[![Bower](https://img.shields.io/bower/v/bootstrap.svg?maxAge=2592000?style=plastic)](https://github.com/sirap-group/tinymce-plugin-paragraph)
+[![GitHub tag](https://img.shields.io/github/tag/sirap-group/tinymce-plugin-paragraph.svg?maxAge=2592000?style=plastic)](git@github.com:sirap-group/tinymce-plugin-paragraph.git)
+[![npm](https://img.shields.io/npm/v/tinymce-plugin-paragraph.svg?maxAge=2592000?style=plastic)](https://www.npmjs.com/package/tinymce-plugin-paragraph)
+[![Bower](https://img.shields.io/bower/v/tinymce-plugin-paragraph.svg?maxAge=2592000?style=plastic)](https://github.com/sirap-group/tinymce-plugin-paragraph)
 
 [![JavaScript Style Guide](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 [![Semver 2.0](https://img.shields.io/badge/Versioning-Semver%202.0-brightgreen.svg)](http://semver.org/)
