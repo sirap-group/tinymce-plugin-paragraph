@@ -1,6 +1,6 @@
 {
   "name": "tinymce-plugin-paragraph",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "description": "A plugin for tinymce WYSIWYG HTML editor that allow to edit paragraph properties.",
   "main": "plugin.js",
   "devDependencies": {
