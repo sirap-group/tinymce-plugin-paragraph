@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com:sirap-group/tinymce-plugin-paragraph.git"
+    "url": "https://github.com:sirap-group/tinymce-plugin-paragraph.git"
   },
   "keywords": [
     "tinymce",
