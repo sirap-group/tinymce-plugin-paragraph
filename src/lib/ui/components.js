@@ -17,8 +17,8 @@ module.exports = {
  */
 function createBordersTab (editor) {
   // border width form inputs
-  var borderWidthTextBox = uiHelpers.createTextBox('Border width', 'borderWidth')
-  var borderWidthUnitSelect = uiHelpers.createUnitSelectBox('borderWidthUnit', 'mm')
+  var borderWidthTextBox = uiHelpers.createTextBox('Border width', 'borderWidth', 90)
+  var borderWidthUnitSelect = uiHelpers.createUnitSelectBox('borderWidthUnit', 'mm', 140, 140)
 
   // border style
   var borderStyleItemNone = uiHelpers.createListBoxItem('none')
@@ -37,7 +37,7 @@ function createBordersTab (editor) {
     borderStyleItemGroove, borderStyleItemRidge, borderStyleItemInset,
     borderStyleItemOutset
   ]
-  var borderStyleListBox = uiHelpers.createListBox('Border style', 'borderStyle', borderStyleValues, borderStyleItemNone)
+  var borderStyleListBox = uiHelpers.createListBox('Border style', 'borderStyle', borderStyleValues, borderStyleItemNone, 90)
 
   // border color picker
   var borderColorPicker = uiHelpers.createColorPicker('Border color', 'borderColor', eventHandlers.createColorPickAction(editor))
@@ -45,7 +45,7 @@ function createBordersTab (editor) {
   // create form
   var borderForm = uiHelpers.createForm([ borderWidthTextBox, borderWidthUnitSelect, borderStyleListBox, borderColorPicker ])
   // create field set
-  var borderFieldset = uiHelpers.createFieldset('', [ borderForm ])
+  var borderFieldset = uiHelpers.createFieldset('', [ borderForm ], 460)
 
   // create border tab
   var borderTab = uiHelpers.createTab('Borders', borderFieldset)
@@ -61,29 +61,29 @@ function createBordersTab (editor) {
  */
 function createSpacingTab () {
   // padding top
-  var paddingTopTextBox = uiHelpers.createTextBox('Padding top', 'paddingTop')
+  var paddingTopTextBox = uiHelpers.createTextBox('Padding top', 'paddingTop', 65)
   var paddingTopUnitSelect = uiHelpers.createUnitSelectBox('paddingTopUnit', 'mm')
   // padding right
-  var paddingRightTextBox = uiHelpers.createTextBox('Padding right', 'paddingRight')
+  var paddingRightTextBox = uiHelpers.createTextBox('Padding right', 'paddingRight', 65)
   var paddingRightUnitSelect = uiHelpers.createUnitSelectBox('paddingRightUnit', 'mm')
   // padding bottom
-  var paddingBottomTextBox = uiHelpers.createTextBox('Padding bottom', 'paddingBottom')
+  var paddingBottomTextBox = uiHelpers.createTextBox('Padding bottom', 'paddingBottom', 65)
   var paddingBottomUnitSelect = uiHelpers.createUnitSelectBox('paddingBottomUnit', 'mm')
   // padding left
-  var paddingLeftTextBox = uiHelpers.createTextBox('Padding left', 'paddingLeft')
+  var paddingLeftTextBox = uiHelpers.createTextBox('Padding left', 'paddingLeft', 65)
   var paddingLeftUnitSelect = uiHelpers.createUnitSelectBox('paddingLeftUnit', 'mm')
 
   // margin top
-  var marginTopTextBox = uiHelpers.createTextBox('Margin top', 'marginTop')
+  var marginTopTextBox = uiHelpers.createTextBox('Margin top', 'marginTop', 65)
   var marginTopUnitSelect = uiHelpers.createUnitSelectBox('marginTopUnit', 'mm')
   // margin right
-  var marginRightTextBox = uiHelpers.createTextBox('Margin right', 'marginRight')
+  var marginRightTextBox = uiHelpers.createTextBox('Margin right', 'marginRight', 65)
   var marginRightUnitSelect = uiHelpers.createUnitSelectBox('marginRightUnit', 'mm')
   // margin bottom
-  var marginBottomTextBox = uiHelpers.createTextBox('Margin bottom', 'marginBottom')
+  var marginBottomTextBox = uiHelpers.createTextBox('Margin bottom', 'marginBottom', 65)
   var marginBottomUnitSelect = uiHelpers.createUnitSelectBox('marginBottomUnit', 'mm')
   // margin left
-  var marginLeftTextBox = uiHelpers.createTextBox('Margin left', 'marginLeft')
+  var marginLeftTextBox = uiHelpers.createTextBox('Margin left', 'marginLeft', 65)
   var marginLeftUnitSelect = uiHelpers.createUnitSelectBox('marginLeftUnit', 'mm')
 
   // padding form
@@ -103,9 +103,9 @@ function createSpacingTab () {
   ])
 
   // padding fieldset
-  var paddingFieldSet = uiHelpers.createFieldset('Padding', [paddingForm])
+  var paddingFieldSet = uiHelpers.createFieldset('Padding', [paddingForm], 500)
   // margin fieldset
-  var marginFieldSet = uiHelpers.createFieldset('Margins', [marginForm])
+  var marginFieldSet = uiHelpers.createFieldset('Margins', [marginForm], 500)
 
   // spacing tab
   var spacingTab = uiHelpers.createTab('Spacing', [paddingFieldSet, marginFieldSet])
@@ -122,11 +122,11 @@ function createSpacingTab () {
  */
 function createGeneralTab () {
   // text indent form inputs
-  var textIndentTextBox = uiHelpers.createTextBox('Text indent', 'textIndent')
+  var textIndentTextBox = uiHelpers.createTextBox('Text indent', 'textIndent', 65)
   var textIndentUnitSelect = uiHelpers.createUnitSelectBox('textIndentUnit', 'mm')
 
   // line spacing form inputs
-  var lineHeightTextBox = uiHelpers.createTextBox('Line height', 'lineHeight')
+  var lineHeightTextBox = uiHelpers.createTextBox('Line height', 'lineHeight', 65)
   var lineSpacingUnitSelect = uiHelpers.createUnitSelectBox('lineSpacingUnit', 'mm')
 
   // paragraph fieldset form
@@ -136,7 +136,7 @@ function createGeneralTab () {
   ])
 
   // paragraph fieldset
-  var paragraphFieldSet = uiHelpers.createFieldset('Paragraph', [paragraphForm], 500)
+  var paragraphFieldSet = uiHelpers.createFieldset('', [paragraphForm], 460)
   // general tab
   var generalTab = uiHelpers.createTab('General', [paragraphFieldSet])
 
