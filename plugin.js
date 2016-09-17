@@ -137,8 +137,8 @@ module.exports = {
  */
 function createBordersTab (editor) {
   // border width form inputs
-  var borderWidthTextBox = uiHelpers.createTextBox('Border width', 'borderWidth')
-  var borderWidthUnitSelect = uiHelpers.createUnitSelectBox('borderWidthUnit', 'mm')
+  var borderWidthTextBox = uiHelpers.createTextBox('Border width', 'borderWidth', 90)
+  var borderWidthUnitSelect = uiHelpers.createUnitSelectBox('borderWidthUnit', 'mm', 140, 140)
 
   // border style
   var borderStyleItemNone = uiHelpers.createListBoxItem('none')
@@ -157,7 +157,7 @@ function createBordersTab (editor) {
     borderStyleItemGroove, borderStyleItemRidge, borderStyleItemInset,
     borderStyleItemOutset
   ]
-  var borderStyleListBox = uiHelpers.createListBox('Border style', 'borderStyle', borderStyleValues, borderStyleItemNone)
+  var borderStyleListBox = uiHelpers.createListBox('Border style', 'borderStyle', borderStyleValues, borderStyleItemNone, 90)
 
   // border color picker
   var borderColorPicker = uiHelpers.createColorPicker('Border color', 'borderColor', eventHandlers.createColorPickAction(editor))
@@ -165,7 +165,7 @@ function createBordersTab (editor) {
   // create form
   var borderForm = uiHelpers.createForm([ borderWidthTextBox, borderWidthUnitSelect, borderStyleListBox, borderColorPicker ])
   // create field set
-  var borderFieldset = uiHelpers.createFieldset('', [ borderForm ])
+  var borderFieldset = uiHelpers.createFieldset('', [ borderForm ], 460)
 
   // create border tab
   var borderTab = uiHelpers.createTab('Borders', borderFieldset)
@@ -181,29 +181,29 @@ function createBordersTab (editor) {
  */
 function createSpacingTab () {
   // padding top
-  var paddingTopTextBox = uiHelpers.createTextBox('Padding top', 'paddingTop')
+  var paddingTopTextBox = uiHelpers.createTextBox('Padding top', 'paddingTop', 65)
   var paddingTopUnitSelect = uiHelpers.createUnitSelectBox('paddingTopUnit', 'mm')
   // padding right
-  var paddingRightTextBox = uiHelpers.createTextBox('Padding right', 'paddingRight')
+  var paddingRightTextBox = uiHelpers.createTextBox('Padding right', 'paddingRight', 65)
   var paddingRightUnitSelect = uiHelpers.createUnitSelectBox('paddingRightUnit', 'mm')
   // padding bottom
-  var paddingBottomTextBox = uiHelpers.createTextBox('Padding bottom', 'paddingBottom')
+  var paddingBottomTextBox = uiHelpers.createTextBox('Padding bottom', 'paddingBottom', 65)
   var paddingBottomUnitSelect = uiHelpers.createUnitSelectBox('paddingBottomUnit', 'mm')
   // padding left
-  var paddingLeftTextBox = uiHelpers.createTextBox('Padding left', 'paddingLeft')
+  var paddingLeftTextBox = uiHelpers.createTextBox('Padding left', 'paddingLeft', 65)
   var paddingLeftUnitSelect = uiHelpers.createUnitSelectBox('paddingLeftUnit', 'mm')
 
   // margin top
-  var marginTopTextBox = uiHelpers.createTextBox('Margin top', 'marginTop')
+  var marginTopTextBox = uiHelpers.createTextBox('Margin top', 'marginTop', 65)
   var marginTopUnitSelect = uiHelpers.createUnitSelectBox('marginTopUnit', 'mm')
   // margin right
-  var marginRightTextBox = uiHelpers.createTextBox('Margin right', 'marginRight')
+  var marginRightTextBox = uiHelpers.createTextBox('Margin right', 'marginRight', 65)
   var marginRightUnitSelect = uiHelpers.createUnitSelectBox('marginRightUnit', 'mm')
   // margin bottom
-  var marginBottomTextBox = uiHelpers.createTextBox('Margin bottom', 'marginBottom')
+  var marginBottomTextBox = uiHelpers.createTextBox('Margin bottom', 'marginBottom', 65)
   var marginBottomUnitSelect = uiHelpers.createUnitSelectBox('marginBottomUnit', 'mm')
   // margin left
-  var marginLeftTextBox = uiHelpers.createTextBox('Margin left', 'marginLeft')
+  var marginLeftTextBox = uiHelpers.createTextBox('Margin left', 'marginLeft', 65)
   var marginLeftUnitSelect = uiHelpers.createUnitSelectBox('marginLeftUnit', 'mm')
 
   // padding form
@@ -223,9 +223,9 @@ function createSpacingTab () {
   ])
 
   // padding fieldset
-  var paddingFieldSet = uiHelpers.createFieldset('Padding', [paddingForm])
+  var paddingFieldSet = uiHelpers.createFieldset('Padding', [paddingForm], 500)
   // margin fieldset
-  var marginFieldSet = uiHelpers.createFieldset('Margins', [marginForm])
+  var marginFieldSet = uiHelpers.createFieldset('Margins', [marginForm], 500)
 
   // spacing tab
   var spacingTab = uiHelpers.createTab('Spacing', [paddingFieldSet, marginFieldSet])
@@ -242,11 +242,11 @@ function createSpacingTab () {
  */
 function createGeneralTab () {
   // text indent form inputs
-  var textIndentTextBox = uiHelpers.createTextBox('Text indent', 'textIndent')
+  var textIndentTextBox = uiHelpers.createTextBox('Text indent', 'textIndent', 65)
   var textIndentUnitSelect = uiHelpers.createUnitSelectBox('textIndentUnit', 'mm')
 
   // line spacing form inputs
-  var lineHeightTextBox = uiHelpers.createTextBox('Line height', 'lineHeight')
+  var lineHeightTextBox = uiHelpers.createTextBox('Line height', 'lineHeight', 65)
   var lineSpacingUnitSelect = uiHelpers.createUnitSelectBox('lineSpacingUnit', 'mm')
 
   // paragraph fieldset form
@@ -256,7 +256,7 @@ function createGeneralTab () {
   ])
 
   // paragraph fieldset
-  var paragraphFieldSet = uiHelpers.createFieldset('Paragraph', [paragraphForm], 500)
+  var paragraphFieldSet = uiHelpers.createFieldset('', [paragraphForm], 460)
   // general tab
   var generalTab = uiHelpers.createTab('General', [paragraphFieldSet])
 
@@ -295,13 +295,19 @@ module.exports = {
  * @method
  * @param {string} label The textBox label
  * @param {string} name The textBox name
+ * @param {number} [maxWidth=null] The maximum width for the input
+ * @param {number} [minWidth=55] The minimum width for the input
  * @returns {TextBox} textBox The new textBox
  */
-function createTextBox (label, name) {
-  return {
+function createTextBox (label, name, maxWidth, minWidth) {
+  var textBox = {
     label: label,
-    name: name
+    name: name,
+    maxWidth: maxWidth || null,
+    minWidth: minWidth || 55
   }
+
+  return textBox
 }
 
 /**
@@ -309,16 +315,18 @@ function createTextBox (label, name) {
  * @method
  * @param {string} inputName - A name to identify the input in the form
  * @param {string} [defaultUnit=pt] - A default unit in (`pt`, `mm`, or `cm`).
+ * @param {number} [maxWidth=55] - The maximum width for th input.
+ * @param {number} [minWidth=55] - The minimum width for th input.
  * @returns {SelectBox} unitSelectBox The new unit select box.
  */
-function createUnitSelectBox (inputName, defaultUnit) {
+function createUnitSelectBox (inputName, defaultUnit, maxWidth, minWidth) {
   defaultUnit = defaultUnit || 'pt'
   return {
     label: 'Unit',
     name: inputName,
     type: 'listbox',
-    minWidth: 90,
-    maxWidth: 90,
+    minWidth: minWidth || 55,
+    maxWidth: maxWidth || 55,
     values: [
       {text: 'pt', value: 'pt'},
       {text: 'cm', value: 'cm'},
@@ -354,17 +362,15 @@ function createTab (title, fieldsets, direction) {
  * @method
  * @param {string} title The field set title
  * @param {array<object>} items The field items to put in the field set
- * @param {number} [maxWidth] The maximum with for the fieldset, in pixels
+ * @param {number} [maxWidth=null] The maximum with for the fieldset, in pixels
  * @returns {Fieldset} fieldset The new field set
  */
 function createFieldset (title, items, maxWidth) {
   var fieldset = {
     type: 'fieldset',
     title: title,
-    items: items
-  }
-  if (maxWidth) {
-    fieldset.maxWidth = 500
+    items: items,
+    maxWidth: maxWidth || null
   }
   return fieldset
 }
@@ -396,16 +402,17 @@ function createForm (items) {
  * @param {string} name The name of the list box to identify it in the form
  * @param {array<ListBoxItem>} values An array of list box items
  * @param {ListBoxItem} [defaultItem=N/A] An item to select as default value
+ * @param {number} [maxWidth=null] The maximum width for the input
  * @returns
  */
-function createListBox (label, name, values, defaultItem) {
+function createListBox (label, name, values, defaultItem, maxWidth) {
   return {
     label: label,
     name: name,
     type: 'listbox',
     text: 'None',
     minWidth: 90,
-    maxWidth: null,
+    maxWidth: maxWidth,
     values: values
   }
 }
@@ -439,6 +446,8 @@ function createColorPicker (label, name, callback) {
     type: 'colorbox',
     label: label,
     name: name,
+    minWidth: 140,
+    maxWidth: 140,
     onaction: callback
   }
 }
