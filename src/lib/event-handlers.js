@@ -48,14 +48,12 @@ function processAllChangesOnMainWinSubmit (editor, paragraph) {
     // process all changes in a undo/redo transaction
     editor.undoManager.transact(function () {
       // set text indent
-      if (data.textIndent) {
-        editor.dom.setStyle(paragraph, 'text-indent', data.textIndent + data.textIndentUnit)
-      }
+      var textIndent = (data.textIndent) ? data.textIndent + data.textIndentUnit : null
+      editor.dom.setStyle(paragraph, 'text-indent', textIndent)
 
       // set line height
-      if (data.lineHeight) {
-        editor.dom.setStyle(paragraph, 'line-height', data.lineHeight + data.lineHeightUnit)
-      }
+      var lineHeight = (data.lineHeight) ? data.lineHeight + data.lineHeightUnit : null
+      editor.dom.setStyle(paragraph, 'line-height', lineHeight)
 
       // set padding style
       var padding = ''
@@ -73,13 +71,16 @@ function processAllChangesOnMainWinSubmit (editor, paragraph) {
       margin += String((data.marginLeft) ? data.marginLeft + data.marginLeftUnit : '0')
       editor.dom.setStyle(paragraph, 'margin', margin)
 
-      // set borders style
-      if (data.borderWidth) {
-        editor.dom.setStyle(paragraph, 'border-width', data.borderWidth + data.borderWidthUnit)
-      }
+      // set border width
+      var borderWidth = (data.borderWidth) ? data.borderWidth + data.borderWidthUnit : null
+      editor.dom.setStyle(paragraph, 'border-width', borderWidth)
+
+      // set border style
       if (data.borderStyle) {
         editor.dom.setStyle(paragraph, 'border-style', data.borderStyle)
       }
+
+      // set border color
       if (data.borderColor) {
         editor.dom.setStyle(paragraph, 'border-color', data.borderColor)
       }
