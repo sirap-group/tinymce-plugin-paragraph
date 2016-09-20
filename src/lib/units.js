@@ -9,6 +9,7 @@ createDpiTestElements()
 module.exports = {
   getUnitValues: getUnitValues,
   getValueFromStyle: getValueFromStyle,
+  getUnitFromStyle: getUnitFromStyle,
   setFormValueWithUnit: setFormValueWithUnit,
   setFormValueWithoutUnit: setFormValueWithoutUnit,
   getDpi: getDpi
@@ -32,6 +33,18 @@ function getUnitValues () {
  */
 function getValueFromStyle (styleValue) {
   return styleValue.slice(0, styleValue.length - 2)
+}
+
+/**
+ * Get the 2-digit unit representation of a style value with unit.
+ * For example, returns `px` from a style value of `11px`
+ * @method
+ * @static
+ * @param {string} styleValue A style value with a 2-digits unit
+ * @returns {string} - The unit as a 2-digits representation
+ */
+function getUnitFromStyle (styleValue) {
+  return styleValue.slice(styleValue.length - 2, styleValue.length)
 }
 
 function setFormValueWithUnit (dom, paragraph, formData, cssPropertyName, propertyName, defaultValue) {
