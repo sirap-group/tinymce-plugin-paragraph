@@ -4,6 +4,8 @@ module.exports = {
   setPaddings: setPaddings
 }
 
+}
+
 function setPaddings (dom, paragraph, cssData) {
   // set padding style
   var padding, paddingTop, paddingRight, paddingBottom, paddingLeft
@@ -16,6 +18,7 @@ function setPaddings (dom, paragraph, cssData) {
   var topEqualsBottom = allPaddingsDefined && (paddingTop === paddingBottom)
   var rightEqualsLeft = allPaddingsDefined && (paddingRight === paddingLeft)
   var allEquals = topEqualsBottom && rightEqualsLeft && (paddingTop === paddingRight)
+
   if (allPaddingsDefined) {
     if (allEquals) {
       // padding: (top || bottom || right || left)
