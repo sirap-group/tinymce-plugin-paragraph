@@ -8,6 +8,7 @@ createDpiTestElements()
 
 module.exports = {
   getUnitValues: getUnitValues,
+  getValueFromStyle: getValueFromStyle,
   setFormValueWithUnit: setFormValueWithUnit,
   setFormValueWithoutUnit: setFormValueWithoutUnit,
   getDpi: getDpi
@@ -19,6 +20,18 @@ function getUnitValues () {
     {text: 'cm', value: 'cm'},
     {text: 'mm', value: 'mm'}
   ]
+}
+
+/**
+ * Get the numerc value of a style value with unit (remove the 2-digits unit and cast as number)
+ * For example, returns `11` from a style value of `11px`
+ * @method
+ * @static
+ * @param {string} styleValue A style value with a 2-digits unit
+ * @returns {number} - The absolute value of the given style value
+ */
+function getValueFromStyle (styleValue) {
+  return styleValue.slice(0, styleValue.length - 2)
 }
 
 function setFormValueWithUnit (dom, paragraph, formData, cssPropertyName, propertyName, defaultValue) {
