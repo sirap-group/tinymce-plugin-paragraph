@@ -1,7 +1,8 @@
 'use strict'
 
 module.exports = {
-  setPaddings: setPaddings
+  setPaddings: setPaddings,
+  setMargins: setMargins
 }
 
 }
@@ -45,6 +46,49 @@ function setPaddings (dom, paragraph, cssData) {
     }
     if (paddingLeft) {
       dom.setStyle(paragraph, 'padding-left', paddingLeft)
+    }
+  }
+}
+
+function setMargins (dom, paragraph, cssData) {
+  // set margin style
+  var margin, marginTop, marginRight, marginBottom, marginLeft
+  marginTop = (cssData.marginTop) ? cssData.marginTop + cssData.marginTopUnit : null
+  marginRight = (cssData.marginRight) ? cssData.marginRight + cssData.marginRightUnit : null
+  marginBottom = (cssData.marginBottom) ? cssData.marginBottom + cssData.marginBottomUnit : null
+  marginLeft = (cssData.marginLeft) ? cssData.marginLeft + cssData.marginLeftUnit : null
+
+  var allMarginsDefined = marginTop && marginRight && marginBottom && marginLeft
+  var topEqualsBottom = allMarginsDefined && (marginTop === marginBottom)
+  var rightEqualsLeft = allMarginsDefined && (marginRight === marginLeft)
+  var allEquals = topEqualsBottom && rightEqualsLeft && (marginTop === marginRight)
+
+  if (allMarginsDefined) {
+    if (allEquals) {
+      // margin: (top || bottom || right || left)
+      margin = marginTop
+    } else if (topEqualsBottom && rightEqualsLeft) {
+      // margin: (top || bottom) (right || left)
+      margin = [marginTop, marginRight].join(' ')
+    } else if (rightEqualsLeft) {
+      margin = [marginTop, marginRight, marginBottom].join(' ')
+    } else {
+      // margin: top right bottom left
+      margin = [marginTop, marginRight, marginBottom, marginLeft].join(' ')
+    }
+    dom.setStyle(paragraph, 'margin', margin)
+  } else {
+    if (marginTop) {
+      dom.setStyle(paragraph, 'margin-top', marginTop)
+    }
+    if (marginRight) {
+      dom.setStyle(paragraph, 'margin-right', marginRight)
+    }
+    if (marginBottom) {
+      dom.setStyle(paragraph, 'margin-bottom', marginBottom)
+    }
+    if (marginLeft) {
+      dom.setStyle(paragraph, 'margin-left', marginLeft)
     }
   }
 }

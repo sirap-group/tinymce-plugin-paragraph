@@ -58,14 +58,7 @@ function processAllChangesOnMainWinSubmit (editor, paragraph) {
       editor.dom.setStyle(paragraph, 'line-height', lineHeight)
 
       setStyles.setPaddings(editor.dom, paragraph, data)
-
-      // set margin style
-      var margin = ''
-      margin += String((data.marginTop) ? data.marginTop + data.marginTopUnit : '0').concat(' ')
-      margin += String((data.marginRight) ? data.marginRight + data.marginRightUnit : '0').concat(' ')
-      margin += String((data.marginBottom) ? data.marginBottom + data.marginBottomUnit : '0').concat(' ')
-      margin += String((data.marginLeft) ? data.marginLeft + data.marginLeftUnit : '0')
-      editor.dom.setStyle(paragraph, 'margin', margin)
+      setStyles.setMargins(editor.dom, paragraph, data)
 
       // set border width
       var borderWidth = (data.borderWidth) ? data.borderWidth + data.borderWidthUnit : null
