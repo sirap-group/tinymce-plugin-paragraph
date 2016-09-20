@@ -1,7 +1,171 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict'
 
+var getComputedStyle = window.getComputedStyle
+
+module.exports = {
+  getComputed: getComputed
+}
+
+/**
+ * Get real computed style for an element
+ * @function
+ * @static
+ * @param {Element} element The element to look at its computed styles
+ * @param {string} [cssRuleName] The css rule name, camel cased.
+ * @returns {object|string} The style object or the style value for the given rule name.
+ * @see https://developer.mozilla.org/fr/docs/Web/API/Window/getComputedStyle
+ * @see https://msdn.microsoft.com/en-us/library/ms535231(v=vs.85).aspx
+ */
+function getComputed (element, cssRuleName) {
+  if (getComputedStyle) {
+    if (cssRuleName) {
+      return getComputedStyle(element)[cssRuleName]
+    } else {
+      return getComputedStyle(element)
+    }
+  } else if (element.currentStyle) {
+    if (cssRuleName) {
+      return element.currentStyle[cssRuleName]
+    } else {
+      return element.currentStyle
+    }
+  } else {
+    throw new Error('Error trying to get computed style. It seems your browser doesnt support it.')
+  }
+}
+
+},{}],2:[function(require,module,exports){
+'use strict'
+
+module.exports = {
+  setTextIndent: setTextIndent,
+  setLineHeight: setLineHeight,
+  setPaddings: setPaddings,
+  setMargins: setMargins,
+  setBorders: setBorders
+}
+
+function setTextIndent (dom, paragraph, cssData) {
+  // set text indent
+  var textIndent = (cssData.textIndent) ? cssData.textIndent + cssData.textIndentUnit : null
+  dom.setStyle(paragraph, 'text-indent', textIndent)
+}
+
+function setLineHeight (dom, paragraph, cssData) {
+  // set line height
+  var lineHeight = (cssData.lineHeight) ? cssData.lineHeight + cssData.lineHeightUnit : null
+  dom.setStyle(paragraph, 'line-height', lineHeight)
+}
+
+function setPaddings (dom, paragraph, cssData) {
+  // set padding style
+  var padding, paddingTop, paddingRight, paddingBottom, paddingLeft
+  paddingTop = (cssData.paddingTop) ? cssData.paddingTop + cssData.paddingTopUnit : null
+  paddingRight = (cssData.paddingRight) ? cssData.paddingRight + cssData.paddingRightUnit : null
+  paddingBottom = (cssData.paddingBottom) ? cssData.paddingBottom + cssData.paddingBottomUnit : null
+  paddingLeft = (cssData.paddingLeft) ? cssData.paddingLeft + cssData.paddingLeftUnit : null
+
+  var allPaddingsDefined = paddingTop && paddingRight && paddingBottom && paddingLeft
+  var topEqualsBottom = allPaddingsDefined && (paddingTop === paddingBottom)
+  var rightEqualsLeft = allPaddingsDefined && (paddingRight === paddingLeft)
+  var allEquals = topEqualsBottom && rightEqualsLeft && (paddingTop === paddingRight)
+
+  if (allPaddingsDefined) {
+    if (allEquals) {
+      // padding: (top || bottom || right || left)
+      padding = paddingTop
+    } else if (topEqualsBottom && rightEqualsLeft) {
+      // padding: (top || bottom) (right || left)
+      padding = [paddingTop, paddingRight].join(' ')
+    } else if (rightEqualsLeft) {
+      padding = [paddingTop, paddingRight, paddingBottom].join(' ')
+    } else {
+      // padding: top right bottom left
+      padding = [paddingTop, paddingRight, paddingBottom, paddingLeft].join(' ')
+    }
+    dom.setStyle(paragraph, 'padding', padding)
+  } else {
+    if (paddingTop) {
+      dom.setStyle(paragraph, 'padding-top', paddingTop)
+    }
+    if (paddingRight) {
+      dom.setStyle(paragraph, 'padding-right', paddingRight)
+    }
+    if (paddingBottom) {
+      dom.setStyle(paragraph, 'padding-bottom', paddingBottom)
+    }
+    if (paddingLeft) {
+      dom.setStyle(paragraph, 'padding-left', paddingLeft)
+    }
+  }
+}
+
+function setMargins (dom, paragraph, cssData) {
+  // set margin style
+  var margin, marginTop, marginRight, marginBottom, marginLeft
+  marginTop = (cssData.marginTop) ? cssData.marginTop + cssData.marginTopUnit : null
+  marginRight = (cssData.marginRight) ? cssData.marginRight + cssData.marginRightUnit : null
+  marginBottom = (cssData.marginBottom) ? cssData.marginBottom + cssData.marginBottomUnit : null
+  marginLeft = (cssData.marginLeft) ? cssData.marginLeft + cssData.marginLeftUnit : null
+
+  var allMarginsDefined = marginTop && marginRight && marginBottom && marginLeft
+  var topEqualsBottom = allMarginsDefined && (marginTop === marginBottom)
+  var rightEqualsLeft = allMarginsDefined && (marginRight === marginLeft)
+  var allEquals = topEqualsBottom && rightEqualsLeft && (marginTop === marginRight)
+
+  if (allMarginsDefined) {
+    if (allEquals) {
+      // margin: (top || bottom || right || left)
+      margin = marginTop
+    } else if (topEqualsBottom && rightEqualsLeft) {
+      // margin: (top || bottom) (right || left)
+      margin = [marginTop, marginRight].join(' ')
+    } else if (rightEqualsLeft) {
+      margin = [marginTop, marginRight, marginBottom].join(' ')
+    } else {
+      // margin: top right bottom left
+      margin = [marginTop, marginRight, marginBottom, marginLeft].join(' ')
+    }
+    dom.setStyle(paragraph, 'margin', margin)
+  } else {
+    if (marginTop) {
+      dom.setStyle(paragraph, 'margin-top', marginTop)
+    }
+    if (marginRight) {
+      dom.setStyle(paragraph, 'margin-right', marginRight)
+    }
+    if (marginBottom) {
+      dom.setStyle(paragraph, 'margin-bottom', marginBottom)
+    }
+    if (marginLeft) {
+      dom.setStyle(paragraph, 'margin-left', marginLeft)
+    }
+  }
+}
+
+function setBorders (dom, paragraph, cssData) {
+  // set border width
+  var borderWidth = (cssData.borderWidth) ? cssData.borderWidth + cssData.borderWidthUnit : null
+  dom.setStyle(paragraph, 'border-width', borderWidth)
+
+  // set border style
+  if (cssData.borderStyle) {
+    dom.setStyle(paragraph, 'border-style', cssData.borderStyle)
+  }
+
+  // set border color
+  if (cssData.borderColor) {
+    dom.setStyle(paragraph, 'border-color', cssData.borderColor)
+  }
+}
+
+},{}],3:[function(require,module,exports){
+'use strict'
+
 var $ = window.jQuery
+
+var setStyles = require('./dom/styles/set-styles')
 
 module.exports = {
   ensureParagraphWrapsTextNodeOnChange: ensureParagraphWrapsTextNodeOnChange,
@@ -48,42 +212,11 @@ function processAllChangesOnMainWinSubmit (editor, paragraph) {
 
     // process all changes in a undo/redo transaction
     editor.undoManager.transact(function () {
-      // set text indent
-      if (data.textIndent) {
-        editor.dom.setStyle(paragraph, 'text-indent', data.textIndent + data.textIndentUnit)
-      }
-
-      // set line height
-      if (data.lineHeight) {
-        editor.dom.setStyle(paragraph, 'line-height', data.lineHeight + data.lineHeightUnit)
-      }
-
-      // set padding style
-      var padding = ''
-      padding += String((data.paddingTop) ? data.paddingTop + data.paddingTopUnit : '0').concat(' ')
-      padding += String((data.paddingRight) ? data.paddingRight + data.paddingRightUnit : '0').concat(' ')
-      padding += String((data.paddingBottom) ? data.paddingBottom + data.paddingBottomUnit : '0').concat(' ')
-      padding += String((data.paddingLeft) ? data.paddingLeft + data.paddingLeftUnit : '0')
-      editor.dom.setStyle(paragraph, 'padding', padding)
-
-      // set margin style
-      var margin = ''
-      margin += String((data.marginTop) ? data.marginTop + data.marginTopUnit : '0').concat(' ')
-      margin += String((data.marginRight) ? data.marginRight + data.marginRightUnit : '0').concat(' ')
-      margin += String((data.marginBottom) ? data.marginBottom + data.marginBottomUnit : '0').concat(' ')
-      margin += String((data.marginLeft) ? data.marginLeft + data.marginLeftUnit : '0')
-      editor.dom.setStyle(paragraph, 'margin', margin)
-
-      // set borders style
-      if (data.borderWidth) {
-        editor.dom.setStyle(paragraph, 'border-width', data.borderWidth + data.borderWidthUnit)
-      }
-      if (data.borderStyle) {
-        editor.dom.setStyle(paragraph, 'border-style', data.borderStyle)
-      }
-      if (data.borderColor) {
-        editor.dom.setStyle(paragraph, 'border-color', data.borderColor)
-      }
+      setStyles.setTextIndent(editor.dom, paragraph, data)
+      setStyles.setLineHeight(editor.dom, paragraph, data)
+      setStyles.setPaddings(editor.dom, paragraph, data)
+      setStyles.setMargins(editor.dom, paragraph, data)
+      setStyles.setBorders(editor.dom, paragraph, data)
     })
   }
 }
@@ -117,7 +250,7 @@ function createColorPickAction (editor) {
   }
 }
 
-},{}],2:[function(require,module,exports){
+},{"./dom/styles/set-styles":2}],4:[function(require,module,exports){
 'use strict'
 
 var uiHelpers = require('./helpers')
@@ -263,7 +396,7 @@ function createGeneralTab () {
   return generalTab
 }
 
-},{"../event-handlers":1,"./helpers":3}],3:[function(require,module,exports){
+},{"../event-handlers":3,"./helpers":5}],5:[function(require,module,exports){
 /**
  * This file contains the source code for the module `lib/ui/helpers`
  * @file
@@ -452,7 +585,7 @@ function createColorPicker (label, name, callback) {
   }
 }
 
-},{}],4:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict'
 
 var eventHandlers = require('../event-handlers')
@@ -527,13 +660,25 @@ function openMainWinFunction (editor) {
   }
 }
 
-},{"../event-handlers":1,"../units":5,"./components":2}],5:[function(require,module,exports){
+},{"../event-handlers":3,"../units":7,"./components":4}],7:[function(require,module,exports){
 'use strict'
+
+var getStyles = require('./dom/styles/get-styles')
+
+var document = window.document
+
+createDpiTestElements()
 
 module.exports = {
   getUnitValues: getUnitValues,
+  getValueFromStyle: getValueFromStyle,
+  getUnitFromStyle: getUnitFromStyle,
   setFormValueWithUnit: setFormValueWithUnit,
-  setFormValueWithoutUnit: setFormValueWithoutUnit
+  setFormValueWithoutUnit: setFormValueWithoutUnit,
+  px2pt: px2pt,
+  px2in: px2in,
+  in2pt: in2pt,
+  getDpi: getDpi
 }
 
 function getUnitValues () {
@@ -544,20 +689,66 @@ function getUnitValues () {
   ]
 }
 
+/**
+ * Get the numerc value of a style value with unit (remove the 2-digits unit and cast as number)
+ * For example, returns `11` from a style value of `11px`
+ * @method
+ * @static
+ * @param {string} styleValue A style value with a 2-digits unit
+ * @returns {number} - The absolute value of the given style value
+ */
+function getValueFromStyle (styleValue) {
+  return styleValue.slice(0, styleValue.length - 2)
+}
+
+/**
+ * Get the 2-digit unit representation of a style value with unit.
+ * For example, returns `px` from a style value of `11px`
+ * @method
+ * @static
+ * @param {string} styleValue A style value with a 2-digits unit
+ * @returns {string} - The unit as a 2-digits representation
+ */
+function getUnitFromStyle (styleValue) {
+  return styleValue.slice(styleValue.length - 2, styleValue.length)
+}
+
 function setFormValueWithUnit (dom, paragraph, formData, cssPropertyName, propertyName, defaultValue) {
+  var _style, computedStyleValue
   if (defaultValue === undefined) {
     defaultValue = '0'
   }
   var rawCssValue = dom.getStyle(paragraph, cssPropertyName)
-  if (rawCssValue !== '') {
+  var computedStyle = getStyles.getComputed(paragraph, cssPropertyName)
+
+  if (!rawCssValue && computedStyle) {
+    computedStyleValue = px2pt(getValueFromStyle(computedStyle))
+    _style = computedStyleValue + 'pt'
+  } else {
+    _style = rawCssValue
+  }
+
+  if (_style !== '') {
     var unitPropertyName = propertyName + 'Unit'
-    formData[propertyName] = rawCssValue.slice(0, rawCssValue.length - 2)
-    formData[unitPropertyName] = rawCssValue.slice(rawCssValue.length - 2, rawCssValue.length)
+    formData[propertyName] = getValueFromStyle(_style)
+    formData[unitPropertyName] = getUnitFromStyle(_style)
   } else {
     formData[propertyName] = defaultValue
   }
 }
 
+/**
+ * Set form value, for a value without unit
+ * @method
+ * @static
+ * @param {object} dom The dom object of the tinymce active editor
+ * @param {DOMElement} paragraph The paragraph element
+ * @param {object} formData A hash containing all needed sets of css property names and values (camelCased)
+ * @param {string} cssPropertyName The css property name (ex: `border-style`) which doesnt work with units
+ * @param {string} propertyName The camelCased property name (ex: `borderStyle`)
+ * @param {string} [defaultValue] An optional default value
+ * @returns undefined
+ */
 function setFormValueWithoutUnit (dom, paragraph, formData, cssPropertyName, propertyName, defaultValue) {
   if (defaultValue === undefined) {
     defaultValue = ''
@@ -570,7 +761,77 @@ function setFormValueWithoutUnit (dom, paragraph, formData, cssPropertyName, pro
   }
 }
 
-},{}],6:[function(require,module,exports){
+/**
+ * Converts pixels (px) to points (pt)
+ * px -> in -> pt
+ * @method
+ * @static
+ * @param {number} px Number of pixels to convert to points
+ * @returns {number} - Resulting number of points (pt)
+ */
+function px2pt (px) {
+  var inches = px2in(px)
+  return in2pt(inches)
+}
+
+/**
+ * Converts pixels (px) to inches (in)
+ * dpi = px / in -> in = px / dpi
+ * @method
+ * @static
+ * @param {number} px Number of pixels to convert to inches
+ * @returns {number} - Resulting number of inches (in)
+ */
+function px2in (px) {
+  var dpi = getDpi()
+  return Number(px) / Number(dpi)
+}
+
+/**
+ * Converts inches (in) to points (pt)
+ * 72 = pt / in -> pt = 72 * in
+ * @method
+ * @static
+ * @param {number} inches Number of inches (in) to convet to points (pt)
+ * @returns {number} - Resulting number of points (pt)
+ */
+function in2pt (inches) {
+  return Number(inches) * 72
+}
+
+/**
+ * Evaluate the DPI of the device's screen (pixels per inche).
+ * It creates and inpect a dedicated and hidden `data-dpi-test` DOM element to
+ * deduct the screen DPI.
+ * @method
+ * @static
+ * @returns {number} - The current screen DPI, so in pixels per inch.
+ */
+function getDpi () {
+  return document.getElementById('dpi-test').offsetHeight
+}
+
+/**
+ * @function
+ * @inner
+ */
+function createDpiTestElements () {
+  var getDpiHtmlStyle = 'data-dpi-test { height: 1in; left: -100%; position: absolute; top: -100%; width: 1in; }'
+
+  var head = document.getElementsByTagName('head')[0]
+  var getDPIElement = document.createElement('style')
+  getDPIElement.setAttribute('type', 'text/css')
+  getDPIElement.setAttribute('rel', 'stylesheet')
+  getDPIElement.innerHTML = getDpiHtmlStyle
+  head.appendChild(getDPIElement)
+
+  var body = document.getElementsByTagName('body')[0]
+  var dpiTestElement = document.createElement('data-dpi-test')
+  dpiTestElement.setAttribute('id', 'dpi-test')
+  body.appendChild(dpiTestElement)
+}
+
+},{"./dom/styles/get-styles":1}],8:[function(require,module,exports){
 /**
  * Plugin source main file
  * @file
@@ -605,4 +866,4 @@ function ParagraphPlugin (editor) {
   })
 }
 
-},{"./lib/event-handlers":1,"./lib/ui/main-window":4}]},{},[6]);
+},{"./lib/event-handlers":3,"./lib/ui/main-window":6}]},{},[8]);
