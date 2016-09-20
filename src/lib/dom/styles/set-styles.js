@@ -1,10 +1,22 @@
 'use strict'
 
 module.exports = {
+  setTextIndent: setTextIndent,
+  setLineHeight: setLineHeight,
   setPaddings: setPaddings,
   setMargins: setMargins
 }
 
+function setTextIndent (dom, paragraph, cssData) {
+  // set text indent
+  var textIndent = (cssData.textIndent) ? cssData.textIndent + cssData.textIndentUnit : null
+  dom.setStyle(paragraph, 'text-indent', textIndent)
+}
+
+function setLineHeight (dom, paragraph, cssData) {
+  // set line height
+  var lineHeight = (cssData.lineHeight) ? cssData.lineHeight + cssData.lineHeightUnit : null
+  dom.setStyle(paragraph, 'line-height', lineHeight)
 }
 
 function setPaddings (dom, paragraph, cssData) {

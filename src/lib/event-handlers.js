@@ -49,14 +49,8 @@ function processAllChangesOnMainWinSubmit (editor, paragraph) {
 
     // process all changes in a undo/redo transaction
     editor.undoManager.transact(function () {
-      // set text indent
-      var textIndent = (data.textIndent) ? data.textIndent + data.textIndentUnit : null
-      editor.dom.setStyle(paragraph, 'text-indent', textIndent)
-
-      // set line height
-      var lineHeight = (data.lineHeight) ? data.lineHeight + data.lineHeightUnit : null
-      editor.dom.setStyle(paragraph, 'line-height', lineHeight)
-
+      setStyles.setTextIndent(editor.dom, paragraph, data)
+      setStyles.setLineHeight(editor.dom, paragraph, data)
       setStyles.setPaddings(editor.dom, paragraph, data)
       setStyles.setMargins(editor.dom, paragraph, data)
 
