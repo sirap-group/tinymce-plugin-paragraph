@@ -29,13 +29,19 @@ module.exports = {
  * @method
  * @param {string} label The textBox label
  * @param {string} name The textBox name
+ * @param {number} [maxWidth=null] The maximum width for the input
+ * @param {number} [minWidth=55] The minimum width for the input
  * @returns {TextBox} textBox The new textBox
  */
-function createTextBox (label, name) {
-  return {
+function createTextBox (label, name, maxWidth, minWidth) {
+  var textBox = {
     label: label,
-    name: name
+    name: name,
+    maxWidth: maxWidth || null,
+    minWidth: minWidth || 55
   }
+
+  return textBox
 }
 
 /**
@@ -43,16 +49,18 @@ function createTextBox (label, name) {
  * @method
  * @param {string} inputName - A name to identify the input in the form
  * @param {string} [defaultUnit=pt] - A default unit in (`pt`, `mm`, or `cm`).
+ * @param {number} [maxWidth=55] - The maximum width for th input.
+ * @param {number} [minWidth=55] - The minimum width for th input.
  * @returns {SelectBox} unitSelectBox The new unit select box.
  */
-function createUnitSelectBox (inputName, defaultUnit) {
+function createUnitSelectBox (inputName, defaultUnit, maxWidth, minWidth) {
   defaultUnit = defaultUnit || 'pt'
   return {
     label: 'Unit',
     name: inputName,
     type: 'listbox',
-    minWidth: 90,
-    maxWidth: 90,
+    minWidth: minWidth || 55,
+    maxWidth: maxWidth || 55,
     values: [
       {text: 'pt', value: 'pt'},
       {text: 'cm', value: 'cm'},
@@ -88,17 +96,15 @@ function createTab (title, fieldsets, direction) {
  * @method
  * @param {string} title The field set title
  * @param {array<object>} items The field items to put in the field set
- * @param {number} [maxWidth] The maximum with for the fieldset, in pixels
+ * @param {number} [maxWidth=null] The maximum with for the fieldset, in pixels
  * @returns {Fieldset} fieldset The new field set
  */
 function createFieldset (title, items, maxWidth) {
   var fieldset = {
     type: 'fieldset',
     title: title,
-    items: items
-  }
-  if (maxWidth) {
-    fieldset.maxWidth = 500
+    items: items,
+    maxWidth: maxWidth || null
   }
   return fieldset
 }
@@ -130,16 +136,17 @@ function createForm (items) {
  * @param {string} name The name of the list box to identify it in the form
  * @param {array<ListBoxItem>} values An array of list box items
  * @param {ListBoxItem} [defaultItem=N/A] An item to select as default value
+ * @param {number} [maxWidth=null] The maximum width for the input
  * @returns
  */
-function createListBox (label, name, values, defaultItem) {
+function createListBox (label, name, values, defaultItem, maxWidth) {
   return {
     label: label,
     name: name,
     type: 'listbox',
     text: 'None',
     minWidth: 90,
-    maxWidth: null,
+    maxWidth: maxWidth,
     values: values
   }
 }
@@ -173,6 +180,8 @@ function createColorPicker (label, name, callback) {
     type: 'colorbox',
     label: label,
     name: name,
+    minWidth: 140,
+    maxWidth: 140,
     onaction: callback
   }
 }
