@@ -2,6 +2,8 @@
 
 var $ = window.jQuery
 
+var setStyles = require('./dom/styles/set-styles')
+
 module.exports = {
   ensureParagraphWrapsTextNodeOnChange: ensureParagraphWrapsTextNodeOnChange,
   processAllChangesOnMainWinSubmit: processAllChangesOnMainWinSubmit,
@@ -47,43 +49,11 @@ function processAllChangesOnMainWinSubmit (editor, paragraph) {
 
     // process all changes in a undo/redo transaction
     editor.undoManager.transact(function () {
-      // set text indent
-      var textIndent = (data.textIndent) ? data.textIndent + data.textIndentUnit : null
-      editor.dom.setStyle(paragraph, 'text-indent', textIndent)
-
-      // set line height
-      var lineHeight = (data.lineHeight) ? data.lineHeight + data.lineHeightUnit : null
-      editor.dom.setStyle(paragraph, 'line-height', lineHeight)
-
-      // set padding style
-      var padding = ''
-      padding += String((data.paddingTop) ? data.paddingTop + data.paddingTopUnit : '0').concat(' ')
-      padding += String((data.paddingRight) ? data.paddingRight + data.paddingRightUnit : '0').concat(' ')
-      padding += String((data.paddingBottom) ? data.paddingBottom + data.paddingBottomUnit : '0').concat(' ')
-      padding += String((data.paddingLeft) ? data.paddingLeft + data.paddingLeftUnit : '0')
-      editor.dom.setStyle(paragraph, 'padding', padding)
-
-      // set margin style
-      var margin = ''
-      margin += String((data.marginTop) ? data.marginTop + data.marginTopUnit : '0').concat(' ')
-      margin += String((data.marginRight) ? data.marginRight + data.marginRightUnit : '0').concat(' ')
-      margin += String((data.marginBottom) ? data.marginBottom + data.marginBottomUnit : '0').concat(' ')
-      margin += String((data.marginLeft) ? data.marginLeft + data.marginLeftUnit : '0')
-      editor.dom.setStyle(paragraph, 'margin', margin)
-
-      // set border width
-      var borderWidth = (data.borderWidth) ? data.borderWidth + data.borderWidthUnit : null
-      editor.dom.setStyle(paragraph, 'border-width', borderWidth)
-
-      // set border style
-      if (data.borderStyle) {
-        editor.dom.setStyle(paragraph, 'border-style', data.borderStyle)
-      }
-
-      // set border color
-      if (data.borderColor) {
-        editor.dom.setStyle(paragraph, 'border-color', data.borderColor)
-      }
+      setStyles.setTextIndent(editor.dom, paragraph, data)
+      setStyles.setLineHeight(editor.dom, paragraph, data)
+      setStyles.setPaddings(editor.dom, paragraph, data)
+      setStyles.setMargins(editor.dom, paragraph, data)
+      setStyles.setBorders(editor.dom, paragraph, data)
     })
   }
 }
