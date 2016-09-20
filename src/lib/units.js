@@ -13,6 +13,7 @@ module.exports = {
   setFormValueWithUnit: setFormValueWithUnit,
   setFormValueWithoutUnit: setFormValueWithoutUnit,
   px2in: px2in,
+  in2pt: in2pt,
   getDpi: getDpi
 }
 
@@ -97,6 +98,18 @@ function setFormValueWithoutUnit (dom, paragraph, formData, cssPropertyName, pro
 function px2in (px) {
   var dpi = getDpi()
   return Number(px) / Number(dpi)
+}
+
+/**
+ * Converts inches (in) to points (pt)
+ * 72 = pt / in -> pt = 72 * in
+ * @method
+ * @static
+ * @param {number} inches Number of inches (in) to convet to points (pt)
+ * @returns {number} - Resulting number of points (pt)
+ */
+function in2pt (inches) {
+  return Number(inches) * 72
 }
 
 function getDpi () {
