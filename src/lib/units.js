@@ -12,6 +12,7 @@ module.exports = {
   getUnitFromStyle: getUnitFromStyle,
   setFormValueWithUnit: setFormValueWithUnit,
   setFormValueWithoutUnit: setFormValueWithoutUnit,
+  px2in: px2in,
   getDpi: getDpi
 }
 
@@ -83,6 +84,19 @@ function setFormValueWithoutUnit (dom, paragraph, formData, cssPropertyName, pro
   } else {
     formData[propertyName] = defaultValue
   }
+}
+
+/**
+ * Converts pixels (px) to inches (in)
+ * dpi = px / in -> in = px / dpi
+ * @method
+ * @static
+ * @param {number} px Number of pixels to convert to inches
+ * @returns {number} - Resulting number of inches (in)
+ */
+function px2in (px) {
+  var dpi = getDpi()
+  return Number(px) / Number(dpi)
 }
 
 function getDpi () {
