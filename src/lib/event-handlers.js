@@ -53,20 +53,7 @@ function processAllChangesOnMainWinSubmit (editor, paragraph) {
       setStyles.setLineHeight(editor.dom, paragraph, data)
       setStyles.setPaddings(editor.dom, paragraph, data)
       setStyles.setMargins(editor.dom, paragraph, data)
-
-      // set border width
-      var borderWidth = (data.borderWidth) ? data.borderWidth + data.borderWidthUnit : null
-      editor.dom.setStyle(paragraph, 'border-width', borderWidth)
-
-      // set border style
-      if (data.borderStyle) {
-        editor.dom.setStyle(paragraph, 'border-style', data.borderStyle)
-      }
-
-      // set border color
-      if (data.borderColor) {
-        editor.dom.setStyle(paragraph, 'border-color', data.borderColor)
-      }
+      setStyles.setBorders(editor.dom, paragraph, data)
     })
   }
 }

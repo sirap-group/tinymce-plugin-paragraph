@@ -4,7 +4,8 @@ module.exports = {
   setTextIndent: setTextIndent,
   setLineHeight: setLineHeight,
   setPaddings: setPaddings,
-  setMargins: setMargins
+  setMargins: setMargins,
+  setBorders: setBorders
 }
 
 function setTextIndent (dom, paragraph, cssData) {
@@ -102,5 +103,21 @@ function setMargins (dom, paragraph, cssData) {
     if (marginLeft) {
       dom.setStyle(paragraph, 'margin-left', marginLeft)
     }
+  }
+}
+
+function setBorders (dom, paragraph, cssData) {
+  // set border width
+  var borderWidth = (cssData.borderWidth) ? cssData.borderWidth + cssData.borderWidthUnit : null
+  dom.setStyle(paragraph, 'border-width', borderWidth)
+
+  // set border style
+  if (cssData.borderStyle) {
+    dom.setStyle(paragraph, 'border-style', cssData.borderStyle)
+  }
+
+  // set border color
+  if (cssData.borderColor) {
+    dom.setStyle(paragraph, 'border-color', cssData.borderColor)
   }
 }
