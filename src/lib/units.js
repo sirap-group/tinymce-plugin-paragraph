@@ -7,14 +7,10 @@ var document = window.document
 createDpiTestElements()
 
 module.exports = {
-  getDpi: getDpi,
   getUnitValues: getUnitValues,
   setFormValueWithUnit: setFormValueWithUnit,
-  setFormValueWithoutUnit: setFormValueWithoutUnit
-}
-
-function getDpi () {
-  return document.getElementById('dpi-test').offsetHeight
+  setFormValueWithoutUnit: setFormValueWithoutUnit,
+  getDpi: getDpi
 }
 
 function getUnitValues () {
@@ -61,6 +57,10 @@ function setFormValueWithoutUnit (dom, paragraph, formData, cssPropertyName, pro
   } else {
     formData[propertyName] = defaultValue
   }
+}
+
+function getDpi () {
+  return document.getElementById('dpi-test').offsetHeight
 }
 
 /**
