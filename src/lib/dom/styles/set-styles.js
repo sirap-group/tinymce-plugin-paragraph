@@ -8,9 +8,9 @@ function setPaddings (dom, paragraph, cssData) {
   // set padding style
   var padding, paddingTop, paddingRight, paddingBottom, paddingLeft
   paddingTop = (cssData.paddingTop) ? cssData.paddingTop + cssData.paddingTopUnit : null
-  paddingRight = (cssData.paddingRight) ? cssData.paddingRight + cssData.paddingTopRight : null
-  paddingBottom = (cssData.paddingBottom) ? cssData.paddingBottom + cssData.paddingTopBottom : null
-  paddingLeft = (cssData.paddingLeft) ? cssData.paddingLeft + cssData.paddingTopLeft : null
+  paddingRight = (cssData.paddingRight) ? cssData.paddingRight + cssData.paddingRightUnit : null
+  paddingBottom = (cssData.paddingBottom) ? cssData.paddingBottom + cssData.paddingBottomUnit : null
+  paddingLeft = (cssData.paddingLeft) ? cssData.paddingLeft + cssData.paddingLeftUnit : null
 
   var allPaddingsDefined = paddingTop && paddingRight && paddingBottom && paddingLeft
   var topEqualsBottom = allPaddingsDefined && (paddingTop === paddingBottom)
