@@ -39,6 +39,18 @@ function setFormValueWithUnit (dom, paragraph, formData, cssPropertyName, proper
   }
 }
 
+/**
+ * Set form value, for a value without unit
+ * @method
+ * @static
+ * @param {object} dom The dom object of the tinymce active editor
+ * @param {DOMElement} paragraph The paragraph element
+ * @param {object} formData A hash containing all needed sets of css property names and values (camelCased)
+ * @param {string} cssPropertyName The css property name (ex: `border-style`) which doesnt work with units
+ * @param {string} propertyName The camelCased property name (ex: `borderStyle`)
+ * @param {string} [defaultValue] An optional default value
+ * @returns undefined
+ */
 function setFormValueWithoutUnit (dom, paragraph, formData, cssPropertyName, propertyName, defaultValue) {
   if (defaultValue === undefined) {
     defaultValue = ''
