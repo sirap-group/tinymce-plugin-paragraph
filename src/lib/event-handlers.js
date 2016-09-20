@@ -2,6 +2,8 @@
 
 var $ = window.jQuery
 
+var domStyle = require('src/lib/dom/style')
+
 module.exports = {
   ensureParagraphWrapsTextNodeOnChange: ensureParagraphWrapsTextNodeOnChange,
   processAllChangesOnMainWinSubmit: processAllChangesOnMainWinSubmit,
@@ -55,13 +57,7 @@ function processAllChangesOnMainWinSubmit (editor, paragraph) {
       var lineHeight = (data.lineHeight) ? data.lineHeight + data.lineHeightUnit : null
       editor.dom.setStyle(paragraph, 'line-height', lineHeight)
 
-      // set padding style
-      var padding = ''
-      padding += String((data.paddingTop) ? data.paddingTop + data.paddingTopUnit : '0').concat(' ')
-      padding += String((data.paddingRight) ? data.paddingRight + data.paddingRightUnit : '0').concat(' ')
-      padding += String((data.paddingBottom) ? data.paddingBottom + data.paddingBottomUnit : '0').concat(' ')
-      padding += String((data.paddingLeft) ? data.paddingLeft + data.paddingLeftUnit : '0')
-      editor.dom.setStyle(paragraph, 'padding', padding)
+      domStyle.setPaddings(editor.dom, paragraph, data)
 
       // set margin style
       var margin = ''
