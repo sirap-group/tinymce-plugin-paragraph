@@ -136,6 +136,14 @@ function in2pt (inches) {
   return Number(inches) * 72
 }
 
+/**
+ * Evaluate the DPI of the device's screen (pixels per inche).
+ * It creates and inpect a dedicated and hidden `data-dpi-test` DOM element to
+ * deduct the screen DPI.
+ * @method
+ * @static
+ * @returns {number} - The current screen DPI, so in pixels per inch.
+ */
 function getDpi () {
   return document.getElementById('dpi-test').offsetHeight
 }
