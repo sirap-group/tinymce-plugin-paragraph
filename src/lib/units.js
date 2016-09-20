@@ -51,14 +51,24 @@ function getUnitFromStyle (styleValue) {
 }
 
 function setFormValueWithUnit (dom, paragraph, formData, cssPropertyName, propertyName, defaultValue) {
+  var _style, computedStyleValue
   if (defaultValue === undefined) {
     defaultValue = '0'
   }
   var rawCssValue = dom.getStyle(paragraph, cssPropertyName)
-  if (rawCssValue !== '') {
+  var computedStyle = getStyles.getComputed(paragraph, cssPropertyName)
+
+  if (!rawCssValue && computedStyle) {
+    computedStyleValue = px2pt(getValueFromStyle(computedStyle))
+    _style = computedStyleValue + 'pt'
+  } else {
+    _style = rawCssValue
+  }
+
+  if (_style !== '') {
     var unitPropertyName = propertyName + 'Unit'
-    formData[propertyName] = rawCssValue.slice(0, rawCssValue.length - 2)
-    formData[unitPropertyName] = rawCssValue.slice(rawCssValue.length - 2, rawCssValue.length)
+    formData[propertyName] = getValueFromStyle(_style)
+    formData[unitPropertyName] = getUnitFromStyle(_style)
   } else {
     formData[propertyName] = defaultValue
   }
