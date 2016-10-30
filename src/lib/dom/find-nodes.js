@@ -9,14 +9,19 @@ var $ = window.jQuery
 var Node = window.Node
 
 module.exports = {
-  getParagraph: getParagraph,
-  getSelectedParagraphes: getSelectedParagraphes
+  getParentParagraph: getParentParagraph,
+  getSelectedParagraphes: getSelectedParagraphes,
+  getChildrenParagraphes: getChildrenParagraphes
 }
 
 /**
  * Find the closest paragraph
+ * @method
+ * @static
+ * @param {Node} node A node contained in the searched paragraph
+ * @returns {HTMLParagraphElment|null}
  */
-function getParagraph (node) {
+function getParentParagraph (node) {
   var paragraph, parents
 
   if (!node || !node.nodeType) {
@@ -37,6 +42,17 @@ function getParagraph (node) {
 }
 
 /**
+ * Find the children paragraphes of a given base element
+ * @method
+ * @static
+ * @param {baseElement} Element An element containing the searched children paragraphes
+ * @returns {jQuery<HTMLParagraphElment>} A jquery list of paragraph elements
+ */
+function getChildrenParagraphes (baseElement) {
+  return $(baseElement).find('p')
+}
+
+/**
  * Find and return all paragraphes under the given selection
  * @method
  * @static
@@ -47,8 +63,8 @@ function getSelectedParagraphes (selection) {
   var paragraphes = []
   var range = selection.getRng()
   var nextNode = null
-  var firstParagraph = getParagraph(range.startContainer)
-  var lastParagraph = getParagraph(range.endContainer)
+  var firstParagraph = getParentParagraph(range.startContainer)
+  var lastParagraph = getParentParagraph(range.endContainer)
 
   paragraphes.push(firstParagraph)
 
@@ -56,10 +72,21 @@ function getSelectedParagraphes (selection) {
     nextNode = firstParagraph.nextElementSibling
     while (nextNode) {
       var isBefore = nextNode.compareDocumentPosition(lastParagraph) & Node.DOCUMENT_POSITION_FOLLOWING
-      var isSame = nextNode === getParagraph(range.endContainer)
+      var isSame = nextNode === getParentParagraph(range.endContainer)
 
       if (isBefore || isSame) {
-        paragraphes.push(getParagraph(nextNode))
+        var parentParagraph = getParentParagraph(nextNode)
+
+        // if the current node a paragraph or is contained into a paragraph,
+        // selected this paragraph
+        if (parentParagraph) {
+          paragraphes.push(parentParagraph)
+        } else {
+          // else, find any paragraph located somewhere in the children of the current node
+          getChildrenParagraphes(nextNode).each(function (i) {
+            paragraphes.push(this)
+          })
+        }
         nextNode = (isSame) ? null : nextNode.nextElementSibling
       } else {
         nextNode = null
