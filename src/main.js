@@ -11,7 +11,6 @@
  * @see Contributing: http://www.tinymce.com/contributing
  */
 
-// var uiComponents = require('./lib/ui/components')
 var mainWindow = require('./lib/ui/main-window')
 var eventHandlers = require('./lib/event-handlers')
 

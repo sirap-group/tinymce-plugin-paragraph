@@ -3,6 +3,7 @@
 var eventHandlers = require('../event-handlers')
 var units = require('../units')
 var uiComponents = require('./components')
+var findNodes = require('../dom/find-nodes')
 // var uiHelpers = require('./helpers')
 
 var $ = window.jQuery
@@ -27,10 +28,10 @@ function openMainWinFunction (editor) {
    * @returns {undefined}
    */
   function openMainWin () {
-    var paragraph = editor.dom.getParent(editor.selection.getStart(), 'p')
+    var paragraphes = findNodes.getSelectedParagraphes(editor.selection)
     var paragraphStyleData = {}
 
-    var valuesWithUnits = [
+    var propertiesWithUnits = [
       ['text-indent', 'textIndent'],
       ['line-height', 'lineHeight'],
       ['padding-top', 'paddingTop'],
@@ -43,20 +44,14 @@ function openMainWinFunction (editor) {
       ['margin-left', 'marginLeft'],
       ['border-width', 'borderWidth']
     ]
-    $.each(valuesWithUnits, function setEachFormValueWithUnit (i, item) {
-      var defaultValue = (item.length === 3) ? item[2] : undefined
-      units.setFormValueWithUnit(editor.dom, paragraph, paragraphStyleData, item[0], item[1], defaultValue)
-    })
 
-    // var defaultBorderStyleItem = uiHelpers.createListBoxItem('none')
-    var valuesWithoutUnits = [
-      ['border-style', 'borderStyle', 'none'],
-      ['border-color', 'borderColor', 'green']
+    var propertiesWithoutUnits = [
+      ['border-style', 'borderStyle'],
+      ['border-color', 'borderColor']
     ]
-    $.each(valuesWithoutUnits, function setEachFormValueWithoutUnit (i, item) {
-      var defaultValue = (item.length === 3) ? item[2] : undefined
-      units.setFormValueWithoutUnit(editor.dom, paragraph, paragraphStyleData, item[0], item[1], defaultValue)
-    })
+
+    $.each(propertiesWithUnits, setEachFormPropertyWithUnit)
+    $.each(propertiesWithoutUnits, setEachFormPropertyWithoutUnit)
 
     var generalTab = uiComponents.createGeneralTab(paragraphStyleData)
     var spacingsTab = uiComponents.createSpacingTab(paragraphStyleData)
@@ -67,7 +62,15 @@ function openMainWinFunction (editor) {
       title: 'Paragraph properties',
       body: [ generalTab, spacingsTab, bordersTab ],
       data: paragraphStyleData,
-      onsubmit: eventHandlers.processAllChangesOnMainWinSubmit(editor, paragraph)
+      onsubmit: eventHandlers.processAllChangesOnMainWinSubmit(editor, paragraphes)
     })
+
+    function setEachFormPropertyWithUnit (i, item) {
+      units.setFormPropertyWithUnit(editor.dom, paragraphes, paragraphStyleData, item[0], item[1])
+    }
+
+    function setEachFormPropertyWithoutUnit (i, item) {
+      units.setFormPropertyWithoutUnit(editor.dom, paragraphes, paragraphStyleData, item[0], item[1])
+    }
   }
 }
