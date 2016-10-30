@@ -10,8 +10,8 @@ module.exports = {
   getUnitValues: getUnitValues,
   getValueFromStyle: getValueFromStyle,
   getUnitFromStyle: getUnitFromStyle,
-  setFormValueWithUnit: setFormValueWithUnit,
-  setFormValueWithoutUnit: setFormValueWithoutUnit,
+  setFormPropertyWithUnit: setFormPropertyWithUnit,
+  setFormPropertyWithoutUnit: setFormPropertyWithoutUnit,
   px2pt: px2pt,
   px2in: px2in,
   in2pt: in2pt,
@@ -50,27 +50,25 @@ function getUnitFromStyle (styleValue) {
   return styleValue.slice(styleValue.length - 2, styleValue.length)
 }
 
-function setFormValueWithUnit (dom, paragraph, formData, cssPropertyName, propertyName, defaultValue) {
+function setFormPropertyWithUnit (dom, paragraphes, formData, cssPropertyName, propertyName) {
   var _style, computedStyleValue
-  if (defaultValue === undefined) {
-    defaultValue = '0'
-  }
-  var rawCssValue = dom.getStyle(paragraph, cssPropertyName)
-  var computedStyle = getStyles.getComputed(paragraph, cssPropertyName)
 
-  if (!rawCssValue && computedStyle) {
+  var computedStyles = paragraphes.map(function (paragraph) {
+    return getStyles.getComputed(paragraph, cssPropertyName)
+  })
+
+  var computedStyle = computedStyles.reduce(function (prev, current) {
+    if (prev === null) return current
+    if (prev === '') return ''
+    return (prev === current) ? prev : ''
+  }, null)
+
+  if (computedStyle) {
     computedStyleValue = px2pt(getValueFromStyle(computedStyle))
     _style = computedStyleValue + 'pt'
-  } else {
-    _style = rawCssValue
-  }
 
-  if (_style !== '') {
-    var unitPropertyName = propertyName + 'Unit'
     formData[propertyName] = getValueFromStyle(_style)
-    formData[unitPropertyName] = getUnitFromStyle(_style)
-  } else {
-    formData[propertyName] = defaultValue
+    formData[propertyName + 'Unit'] = getUnitFromStyle(_style)
   }
 }
 
@@ -86,15 +84,16 @@ function setFormValueWithUnit (dom, paragraph, formData, cssPropertyName, proper
  * @param {string} [defaultValue] An optional default value
  * @returns undefined
  */
-function setFormValueWithoutUnit (dom, paragraph, formData, cssPropertyName, propertyName, defaultValue) {
-  if (defaultValue === undefined) {
-    defaultValue = ''
-  }
-  var rawCssValue = dom.getStyle(paragraph, cssPropertyName)
-  if (rawCssValue !== '') {
-    formData[propertyName] = rawCssValue
-  } else {
-    formData[propertyName] = defaultValue
+function setFormPropertyWithoutUnit (dom, paragraphes, formData, cssPropertyName, propertyName) {
+  var computedStyle = paragraphes.map(function (paragraph) {
+    return getStyles.getComputed(paragraph, cssPropertyName)
+  }).reduce(function (prev, current) {
+    if (prev === null) return current
+    if (prev === '') return ''
+    return (prev === current) ? prev : ''
+  })
+  if (computedStyle) {
+    formData[propertyName] = computedStyle
   }
 }
 
