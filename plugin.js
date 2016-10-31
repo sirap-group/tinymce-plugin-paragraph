@@ -1,6 +1,106 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict'
 
+/**
+ * This module exports some static methods to help finding DOM nodes in a DOM tree
+ * @module dom/findNodes
+ */
+
+var $ = window.jQuery
+var Node = window.Node
+
+module.exports = {
+  getParentParagraph: getParentParagraph,
+  getSelectedParagraphes: getSelectedParagraphes,
+  getChildrenParagraphes: getChildrenParagraphes
+}
+
+/**
+ * Find the closest paragraph
+ * @method
+ * @static
+ * @param {Node} node A node contained in the searched paragraph
+ * @returns {HTMLParagraphElment|null}
+ */
+function getParentParagraph (node) {
+  var paragraph, parents
+
+  if (!node || !node.nodeType) {
+    console.log(node)
+    throw new Error('InvalidTypeError. `node` must be an HTML Node.')
+  }
+
+  if (node.nodeName === 'P') {
+    paragraph = node
+  }
+
+  parents = $(node).parents('p')
+  if (parents.length) {
+    paragraph = parents[0]
+  }
+
+  return paragraph || null
+}
+
+/**
+ * Find the children paragraphes of a given base element
+ * @method
+ * @static
+ * @param {baseElement} Element An element containing the searched children paragraphes
+ * @returns {jQuery<HTMLParagraphElment>} A jquery list of paragraph elements
+ */
+function getChildrenParagraphes (baseElement) {
+  return $(baseElement).find('p')
+}
+
+/**
+ * Find and return all paragraphes under the given selection
+ * @method
+ * @static
+ * @param {Selection} selection The givent selection
+ * @returns {Array<Node>} paragraphes The selected paragraphes
+ */
+function getSelectedParagraphes (selection) {
+  var paragraphes = []
+  var range = selection.getRng()
+  var nextNode = null
+  var firstParagraph = getParentParagraph(range.startContainer)
+  var lastParagraph = getParentParagraph(range.endContainer)
+
+  paragraphes.push(firstParagraph)
+
+  if (!range.collapsed) {
+    nextNode = firstParagraph.nextElementSibling
+    while (nextNode) {
+      var isBefore = nextNode.compareDocumentPosition(lastParagraph) & Node.DOCUMENT_POSITION_FOLLOWING
+      var isSame = nextNode === getParentParagraph(range.endContainer)
+
+      if (isBefore || isSame) {
+        var parentParagraph = getParentParagraph(nextNode)
+
+        // if the current node a paragraph or is contained into a paragraph,
+        // selected this paragraph
+        if (parentParagraph) {
+          paragraphes.push(parentParagraph)
+        } else {
+          // else, find any paragraph located somewhere in the children of the current node
+          getChildrenParagraphes(nextNode).each(function (i) {
+            paragraphes.push(this)
+          })
+        }
+        nextNode = (isSame) ? null : nextNode.nextElementSibling
+      } else {
+        nextNode = null
+      }
+    }
+  }
+
+  return paragraphes
+}
+
+},{}],2:[function(require,module,exports){
+'use strict'
+
 var getComputedStyle = window.getComputedStyle
 
 module.exports = {
@@ -35,7 +135,7 @@ function getComputed (element, cssRuleName) {
   }
 }
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 'use strict'
 
 module.exports = {
@@ -160,7 +260,7 @@ function setBorders (dom, paragraph, cssData) {
   }
 }
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict'
 
 var $ = window.jQuery
@@ -250,7 +350,7 @@ function createColorPickAction (editor) {
   }
 }
 
-},{"./dom/styles/set-styles":2}],4:[function(require,module,exports){
+},{"./dom/styles/set-styles":3}],5:[function(require,module,exports){
 'use strict'
 
 var uiHelpers = require('./helpers')
@@ -396,7 +496,7 @@ function createGeneralTab () {
   return generalTab
 }
 
-},{"../event-handlers":3,"./helpers":5}],5:[function(require,module,exports){
+},{"../event-handlers":4,"./helpers":6}],6:[function(require,module,exports){
 /**
  * This file contains the source code for the module `lib/ui/helpers`
  * @file
@@ -585,12 +685,13 @@ function createColorPicker (label, name, callback) {
   }
 }
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict'
 
 var eventHandlers = require('../event-handlers')
 var units = require('../units')
 var uiComponents = require('./components')
+var findNodes = require('../dom/find-nodes')
 // var uiHelpers = require('./helpers')
 
 var $ = window.jQuery
@@ -615,10 +716,10 @@ function openMainWinFunction (editor) {
    * @returns {undefined}
    */
   function openMainWin () {
-    var paragraph = editor.dom.getParent(editor.selection.getStart(), 'p')
+    var paragraphes = findNodes.getSelectedParagraphes(editor.selection)
     var paragraphStyleData = {}
 
-    var valuesWithUnits = [
+    var propertiesWithUnits = [
       ['text-indent', 'textIndent'],
       ['line-height', 'lineHeight'],
       ['padding-top', 'paddingTop'],
@@ -631,20 +732,14 @@ function openMainWinFunction (editor) {
       ['margin-left', 'marginLeft'],
       ['border-width', 'borderWidth']
     ]
-    $.each(valuesWithUnits, function setEachFormValueWithUnit (i, item) {
-      var defaultValue = (item.length === 3) ? item[2] : undefined
-      units.setFormValueWithUnit(editor.dom, paragraph, paragraphStyleData, item[0], item[1], defaultValue)
-    })
 
-    // var defaultBorderStyleItem = uiHelpers.createListBoxItem('none')
-    var valuesWithoutUnits = [
-      ['border-style', 'borderStyle', 'none'],
-      ['border-color', 'borderColor', 'green']
+    var propertiesWithoutUnits = [
+      ['border-style', 'borderStyle'],
+      ['border-color', 'borderColor']
     ]
-    $.each(valuesWithoutUnits, function setEachFormValueWithoutUnit (i, item) {
-      var defaultValue = (item.length === 3) ? item[2] : undefined
-      units.setFormValueWithoutUnit(editor.dom, paragraph, paragraphStyleData, item[0], item[1], defaultValue)
-    })
+
+    $.each(propertiesWithUnits, setEachFormPropertyWithUnit)
+    $.each(propertiesWithoutUnits, setEachFormPropertyWithoutUnit)
 
     var generalTab = uiComponents.createGeneralTab(paragraphStyleData)
     var spacingsTab = uiComponents.createSpacingTab(paragraphStyleData)
@@ -655,12 +750,20 @@ function openMainWinFunction (editor) {
       title: 'Paragraph properties',
       body: [ generalTab, spacingsTab, bordersTab ],
       data: paragraphStyleData,
-      onsubmit: eventHandlers.processAllChangesOnMainWinSubmit(editor, paragraph)
+      onsubmit: eventHandlers.processAllChangesOnMainWinSubmit(editor, paragraphes)
     })
+
+    function setEachFormPropertyWithUnit (i, item) {
+      units.setFormPropertyWithUnit(editor.dom, paragraphes, paragraphStyleData, item[0], item[1])
+    }
+
+    function setEachFormPropertyWithoutUnit (i, item) {
+      units.setFormPropertyWithoutUnit(editor.dom, paragraphes, paragraphStyleData, item[0], item[1])
+    }
   }
 }
 
-},{"../event-handlers":3,"../units":7,"./components":4}],7:[function(require,module,exports){
+},{"../dom/find-nodes":1,"../event-handlers":4,"../units":8,"./components":5}],8:[function(require,module,exports){
 'use strict'
 
 var getStyles = require('./dom/styles/get-styles')
@@ -673,8 +776,8 @@ module.exports = {
   getUnitValues: getUnitValues,
   getValueFromStyle: getValueFromStyle,
   getUnitFromStyle: getUnitFromStyle,
-  setFormValueWithUnit: setFormValueWithUnit,
-  setFormValueWithoutUnit: setFormValueWithoutUnit,
+  setFormPropertyWithUnit: setFormPropertyWithUnit,
+  setFormPropertyWithoutUnit: setFormPropertyWithoutUnit,
   px2pt: px2pt,
   px2in: px2in,
   in2pt: in2pt,
@@ -713,27 +816,25 @@ function getUnitFromStyle (styleValue) {
   return styleValue.slice(styleValue.length - 2, styleValue.length)
 }
 
-function setFormValueWithUnit (dom, paragraph, formData, cssPropertyName, propertyName, defaultValue) {
+function setFormPropertyWithUnit (dom, paragraphes, formData, cssPropertyName, propertyName) {
   var _style, computedStyleValue
-  if (defaultValue === undefined) {
-    defaultValue = '0'
-  }
-  var rawCssValue = dom.getStyle(paragraph, cssPropertyName)
-  var computedStyle = getStyles.getComputed(paragraph, cssPropertyName)
 
-  if (!rawCssValue && computedStyle) {
+  var computedStyles = paragraphes.map(function (paragraph) {
+    return getStyles.getComputed(paragraph, cssPropertyName)
+  })
+
+  var computedStyle = computedStyles.reduce(function (prev, current) {
+    if (prev === null) return current
+    if (prev === '') return ''
+    return (prev === current) ? prev : ''
+  }, null)
+
+  if (computedStyle) {
     computedStyleValue = px2pt(getValueFromStyle(computedStyle))
     _style = computedStyleValue + 'pt'
-  } else {
-    _style = rawCssValue
-  }
 
-  if (_style !== '') {
-    var unitPropertyName = propertyName + 'Unit'
     formData[propertyName] = getValueFromStyle(_style)
-    formData[unitPropertyName] = getUnitFromStyle(_style)
-  } else {
-    formData[propertyName] = defaultValue
+    formData[propertyName + 'Unit'] = getUnitFromStyle(_style)
   }
 }
 
@@ -749,15 +850,16 @@ function setFormValueWithUnit (dom, paragraph, formData, cssPropertyName, proper
  * @param {string} [defaultValue] An optional default value
  * @returns undefined
  */
-function setFormValueWithoutUnit (dom, paragraph, formData, cssPropertyName, propertyName, defaultValue) {
-  if (defaultValue === undefined) {
-    defaultValue = ''
-  }
-  var rawCssValue = dom.getStyle(paragraph, cssPropertyName)
-  if (rawCssValue !== '') {
-    formData[propertyName] = rawCssValue
-  } else {
-    formData[propertyName] = defaultValue
+function setFormPropertyWithoutUnit (dom, paragraphes, formData, cssPropertyName, propertyName) {
+  var computedStyle = paragraphes.map(function (paragraph) {
+    return getStyles.getComputed(paragraph, cssPropertyName)
+  }).reduce(function (prev, current) {
+    if (prev === null) return current
+    if (prev === '') return ''
+    return (prev === current) ? prev : ''
+  })
+  if (computedStyle) {
+    formData[propertyName] = computedStyle
   }
 }
 
@@ -831,7 +933,7 @@ function createDpiTestElements () {
   body.appendChild(dpiTestElement)
 }
 
-},{"./dom/styles/get-styles":1}],8:[function(require,module,exports){
+},{"./dom/styles/get-styles":2}],9:[function(require,module,exports){
 /**
  * Plugin source main file
  * @file
@@ -845,7 +947,6 @@ function createDpiTestElements () {
  * @see Contributing: http://www.tinymce.com/contributing
  */
 
-// var uiComponents = require('./lib/ui/components')
 var mainWindow = require('./lib/ui/main-window')
 var eventHandlers = require('./lib/event-handlers')
 
@@ -866,4 +967,4 @@ function ParagraphPlugin (editor) {
   })
 }
 
-},{"./lib/event-handlers":3,"./lib/ui/main-window":6}]},{},[8]);
+},{"./lib/event-handlers":4,"./lib/ui/main-window":7}]},{},[9]);
