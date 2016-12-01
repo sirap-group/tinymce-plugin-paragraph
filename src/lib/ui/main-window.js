@@ -71,7 +71,7 @@ function openMainWinFunction (editor) {
       title: 'Paragraph properties',
       body: [ generalTab, spacingsTab, bordersTab ],
       data: paragraphStyleData,
-      onsubmit: eventHandlers.processAllChangesOnMainWinSubmit(editor, paragraphes)
+      onsubmit: onMainWindowSubmit
     })
 
     function setEachFormPropertyWithUnit (i, item) {
@@ -80,6 +80,15 @@ function openMainWinFunction (editor) {
 
     function setEachFormPropertyWithoutUnit (i, item) {
       units.setFormPropertyWithoutUnit(editor.dom, paragraphes, paragraphStyleData, item[0], item[1])
+    }
+
+    function onMainWindowSubmit () {
+      // re-enable visualblocks if it was defined before
+      if (hadVisualblocksClass) {
+        $body.addClass(visualblocksClass)
+      }
+      // process all changes
+      eventHandlers.processAllChangesOnMainWinSubmit(editor, paragraphes)
     }
   }
 }
