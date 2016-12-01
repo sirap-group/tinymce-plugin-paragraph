@@ -28,6 +28,15 @@ function openMainWinFunction (editor) {
    * @returns {undefined}
    */
   function openMainWin () {
+    // disable visualblock option if enabled
+    // (should be re-enabled after)
+    var visualblocksClass = 'mce-visualblocks'
+    var $body = $(editor.getBody())
+    var hadVisualblocksClass = $body.hasClass(visualblocksClass)
+    if (hadVisualblocksClass) {
+      $body.removeClass(visualblocksClass)
+    }
+
     var paragraphes = findNodes.getSelectedParagraphes(editor.selection)
     var paragraphStyleData = {}
 
