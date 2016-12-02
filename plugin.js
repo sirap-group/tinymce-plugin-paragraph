@@ -716,6 +716,15 @@ function openMainWinFunction (editor) {
    * @returns {undefined}
    */
   function openMainWin () {
+    // disable visualblock option if enabled
+    // (should be re-enabled after)
+    var visualblocksClass = 'mce-visualblocks'
+    var $body = $(editor.getBody())
+    var hadVisualblocksClass = $body.hasClass(visualblocksClass)
+    if (hadVisualblocksClass) {
+      $body.removeClass(visualblocksClass)
+    }
+
     var paragraphes = findNodes.getSelectedParagraphes(editor.selection)
     var paragraphStyleData = {}
 
@@ -750,7 +759,7 @@ function openMainWinFunction (editor) {
       title: 'Paragraph properties',
       body: [ generalTab, spacingsTab, bordersTab ],
       data: paragraphStyleData,
-      onsubmit: eventHandlers.processAllChangesOnMainWinSubmit(editor, paragraphes)
+      onsubmit: onMainWindowSubmit
     })
 
     function setEachFormPropertyWithUnit (i, item) {
@@ -759,6 +768,15 @@ function openMainWinFunction (editor) {
 
     function setEachFormPropertyWithoutUnit (i, item) {
       units.setFormPropertyWithoutUnit(editor.dom, paragraphes, paragraphStyleData, item[0], item[1])
+    }
+
+    function onMainWindowSubmit () {
+      // re-enable visualblocks if it was defined before
+      if (hadVisualblocksClass) {
+        $body.addClass(visualblocksClass)
+      }
+      // process all changes
+      eventHandlers.processAllChangesOnMainWinSubmit(editor, paragraphes)
     }
   }
 }
