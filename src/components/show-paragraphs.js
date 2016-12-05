@@ -13,12 +13,14 @@ function init (editor) {
   editor.addButton('showparagraphs', {
     title: 'Show paragraphs',
     cmd: commandName,
+    icon: 'paragraph',
     onPostRender: toggleActiveState
   })
 
   editor.addMenuItem('showparagraphs', {
     text: 'Show paragraphs',
     cmd: commandName,
+    icon: 'paragraph',
     onPostRender: toggleActiveState,
     selectable: true,
     context: 'view',
