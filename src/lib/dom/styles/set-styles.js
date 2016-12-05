@@ -1,12 +1,16 @@
 'use strict'
 
+var $ = window.jQuery
+
 module.exports = {
   setTextIndent: setTextIndent,
   setLineHeight: setLineHeight,
   setPaddings: setPaddings,
   setMargins: setMargins,
   setBorders: setBorders,
-  overridesCustomBordersOnVisualblocks: overridesCustomBordersOnVisualblocks
+  overridesCustomBordersOnVisualblocks: overridesCustomBordersOnVisualblocks,
+  addCssRulesToShowParagraphes: addCssRulesToShowParagraphes,
+  setParagraphVisibility: setParagraphVisibility
 }
 
 function setTextIndent (dom, paragraph, cssData) {
@@ -151,9 +155,40 @@ function overridesCustomBordersOnVisualblocks (_document) {
   .join(',')
   .concat('{ border: 1px dashed #BBB !important; }')
 
+  addStyles(css, _document)
+}
+
+/**
+ * Add "show paragraphes" style to the document
+ * @method
+ * @static
+ * @param {Document} _document The active editor's document
+ * @returns {undefined}
+ */
+function addCssRulesToShowParagraphes (_document) {
+  var css = ".mce-show-paragraphs p > span::after { content: '¶' }"
+  addStyles(css, _document)
+}
+
+/**
+ * Add CSS rules as a STYLE element in the head of the given document
+ * @function
+ * @private
+ * @param {string} cssString The CSS rules as a text string
+ * @param {Document} _document The given document
+ */
+function addStyles (cssString, _document) {
   var styleNode = _document.createElement('style')
   styleNode.setAttribute('type', 'text/css')
-  styleNode.innerText = css
+  styleNode.innerText = cssString
 
   _document.head.appendChild(styleNode)
+}
+
+function setParagraphVisibility (_doc, show) {
+  if (show) {
+    $(_doc.body).addClass('mce-show-paragraphs')
+  } else {
+    $(_doc.body).removeClass('mce-show-paragraphs')
+  }
 }
