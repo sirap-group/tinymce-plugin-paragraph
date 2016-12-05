@@ -88,7 +88,7 @@ function openMainWinFunction (editor) {
         $body.addClass(visualblocksClass)
       }
       // process all changes
-      eventHandlers.processAllChangesOnMainWinSubmit(editor, paragraphes)
+      eventHandlers.processAllChangesOnMainWinSubmit(editor, paragraphes).call(this)
     }
   }
 }

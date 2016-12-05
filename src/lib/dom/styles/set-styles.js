@@ -107,17 +107,26 @@ function setMargins (dom, paragraph, cssData) {
 }
 
 function setBorders (dom, paragraph, cssData) {
-  // set border width
-  var borderWidth = (cssData.borderWidth) ? cssData.borderWidth + cssData.borderWidthUnit : null
-  dom.setStyle(paragraph, 'border-width', borderWidth)
+  // reset borders if with is zero of if style if hidden or none
+  var isZeroWidth = String(cssData.borderWidth) === '0'
+  var isHidden = cssData.borderStyle === 'none' || cssData.borderStyle === 'hidden'
+  if (isZeroWidth || isHidden) {
+    dom.setStyle(paragraph, 'border-width', '')
+    dom.setStyle(paragraph, 'border-style', '')
+    dom.setStyle(paragraph, 'border-color', '')
+  } else {
+    // set border width
+    var borderWidth = (cssData.borderWidth) ? cssData.borderWidth + cssData.borderWidthUnit : null
+    dom.setStyle(paragraph, 'border-width', borderWidth)
 
-  // set border style
-  if (cssData.borderStyle) {
-    dom.setStyle(paragraph, 'border-style', cssData.borderStyle)
-  }
+    // set border style
+    if (cssData.borderStyle) {
+      dom.setStyle(paragraph, 'border-style', cssData.borderStyle)
+    }
 
-  // set border color
-  if (cssData.borderColor) {
-    dom.setStyle(paragraph, 'border-color', cssData.borderColor)
+    // set border color
+    if (cssData.borderColor) {
+      dom.setStyle(paragraph, 'border-color', cssData.borderColor)
+    }
   }
 }
