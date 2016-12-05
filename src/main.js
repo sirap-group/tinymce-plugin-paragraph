@@ -13,15 +13,29 @@
 
 var mainWindow = require('./lib/ui/main-window')
 var eventHandlers = require('./lib/event-handlers')
+var setStyles = require('./lib/dom/styles/set-styles')
+var showParagraphComponent = require('./components/show-paragraphs')
 
 var tinymce = window.tinymce
 
 tinymce.PluginManager.add('paragraph', ParagraphPlugin)
 
 function ParagraphPlugin (editor) {
+  var _doc
+
   // Check if selected text node is a direct chid of a div element.
   // If it does, wrap the text node in a new p element
   editor.on('change', eventHandlers.ensureParagraphWrapsTextNodeOnChange(editor))
+
+  editor.on('init', function () {
+    _doc = editor.getDoc()
+
+    // Overrides custom paragraph borders when visualblock is enabled
+    setStyles.overridesCustomBordersOnVisualblocks(_doc)
+
+    // Add CSS rules to show paragraphs
+    setStyles.addCssRulesToShowParagraphes(_doc)
+  })
 
   editor.addMenuItem('paragraph', {
     separator: 'before',
@@ -29,4 +43,6 @@ function ParagraphPlugin (editor) {
     context: 'format',
     onclick: mainWindow.openMainWinFunction(editor)
   })
+
+  showParagraphComponent.init(editor)
 }
