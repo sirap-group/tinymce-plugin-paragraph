@@ -35,7 +35,7 @@ function ParagraphPlugin (editor) {
 
     // Add CSS rules to show paragraphs
     setStyles.addCssRulesToShowParagraphes(_doc)
-    setStyles.addCssRulesToAddParagraphIcon(_doc)
+    setStyles.addCssRulesToAddParagraphIcon(window.document)
   })
 
   editor.addMenuItem('paragraph', {
