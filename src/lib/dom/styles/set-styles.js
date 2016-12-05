@@ -6,7 +6,8 @@ module.exports = {
   setPaddings: setPaddings,
   setMargins: setMargins,
   setBorders: setBorders,
-  overridesCustomBordersOnVisualblocks: overridesCustomBordersOnVisualblocks
+  overridesCustomBordersOnVisualblocks: overridesCustomBordersOnVisualblocks,
+  addCssRulesToShowParagraphes:addCssRulesToShowParagraphes
 }
 
 function setTextIndent (dom, paragraph, cssData) {
