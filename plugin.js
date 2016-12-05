@@ -1,6 +1,73 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict'
 
+var className = 'mce-show-paragraphs'
+var commandName = 'ShowParagraphs'
+
+module.exports = {
+  init: init
+}
+
+function init (editor) {
+  var menuItem, enabled
+
+  editor.addButton('showparagraphs', {
+    title: 'Show paragraphs',
+    cmd: commandName,
+    onPostRender: toggleActiveState
+  })
+
+  editor.addMenuItem('showparagraphs', {
+    text: 'Show paragraphs',
+    cmd: commandName,
+    onPostRender: toggleActiveState,
+    selectable: true,
+    context: 'view',
+    prependToContext: true
+  })
+
+  editor.addCommand(commandName, showParagraphCommand)
+
+  editor.on('init', function () {
+    if (editor.settings.showparagraphs_default_state) {
+      editor.execCommand(commandName, false, null, {skip_focus: true})
+    }
+  })
+
+  editor.on('remove', function () {
+    editor.dom.removeClass(editor.getBody(), className)
+  })
+
+  function showParagraphCommand () {
+    var dom = editor.dom
+
+    dom.toggleClass(editor.getBody(), className)
+    enabled = editor.dom.hasClass(editor.getBody(), className)
+
+    if (menuItem) {
+      menuItem.active(dom.hasClass(editor.getBody(), className))
+    }
+
+    editor.fire(commandName)
+  }
+
+  /**
+  * @method
+  */
+  function toggleActiveState () {
+    var self = this
+
+    self.active(enabled)
+
+    editor.on(commandName, function () {
+      self.active(editor.dom.hasClass(editor.getBody(), className))
+    })
+  }
+}
+
+},{}],2:[function(require,module,exports){
+'use strict'
+
 /**
  * This module exports some static methods to help finding DOM nodes in a DOM tree
  * @module dom/findNodes
@@ -98,7 +165,7 @@ function getSelectedParagraphes (selection) {
   return paragraphes
 }
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 'use strict'
 
 var getComputedStyle = window.getComputedStyle
@@ -135,15 +202,20 @@ function getComputed (element, cssRuleName) {
   }
 }
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict'
+
+var $ = window.jQuery
 
 module.exports = {
   setTextIndent: setTextIndent,
   setLineHeight: setLineHeight,
   setPaddings: setPaddings,
   setMargins: setMargins,
-  setBorders: setBorders
+  setBorders: setBorders,
+  overridesCustomBordersOnVisualblocks: overridesCustomBordersOnVisualblocks,
+  addCssRulesToShowParagraphes: addCssRulesToShowParagraphes,
+  setParagraphVisibility: setParagraphVisibility
 }
 
 function setTextIndent (dom, paragraph, cssData) {
@@ -245,22 +317,88 @@ function setMargins (dom, paragraph, cssData) {
 }
 
 function setBorders (dom, paragraph, cssData) {
-  // set border width
-  var borderWidth = (cssData.borderWidth) ? cssData.borderWidth + cssData.borderWidthUnit : null
-  dom.setStyle(paragraph, 'border-width', borderWidth)
+  // reset borders if with is zero of if style if hidden or none
+  var isZeroWidth = String(cssData.borderWidth) === '0'
+  var isHidden = cssData.borderStyle === 'none' || cssData.borderStyle === 'hidden'
+  if (isZeroWidth || isHidden) {
+    dom.setStyle(paragraph, 'border-width', '')
+    dom.setStyle(paragraph, 'border-style', '')
+    dom.setStyle(paragraph, 'border-color', '')
+  } else {
+    // set border width
+    var borderWidth = (cssData.borderWidth) ? cssData.borderWidth + cssData.borderWidthUnit : null
+    dom.setStyle(paragraph, 'border-width', borderWidth)
 
-  // set border style
-  if (cssData.borderStyle) {
-    dom.setStyle(paragraph, 'border-style', cssData.borderStyle)
-  }
+    // set border style
+    if (cssData.borderStyle) {
+      dom.setStyle(paragraph, 'border-style', cssData.borderStyle)
+    }
 
-  // set border color
-  if (cssData.borderColor) {
-    dom.setStyle(paragraph, 'border-color', cssData.borderColor)
+    // set border color
+    if (cssData.borderColor) {
+      dom.setStyle(paragraph, 'border-color', cssData.borderColor)
+    }
   }
 }
 
-},{}],4:[function(require,module,exports){
+/**
+ * Overrides the custom borders when visualblocks option is enabled
+ * @method
+ * @static
+ * @param {Document} _document The active editor's document
+ * @returns {undefined}
+ */
+function overridesCustomBordersOnVisualblocks (_document) {
+  var css = [
+    'p[style]',
+    'ul[style]',
+    'section[style]',
+    'div[style]'
+  ].map(function (s) {
+    return '.mce-visualblocks ' + s
+  })
+  .join(',')
+  .concat('{ border: 1px dashed #BBB !important; }')
+
+  addStyles(css, _document)
+}
+
+/**
+ * Add "show paragraphes" style to the document
+ * @method
+ * @static
+ * @param {Document} _document The active editor's document
+ * @returns {undefined}
+ */
+function addCssRulesToShowParagraphes (_document) {
+  var css = ".mce-show-paragraphs p > span::after { content: '¶' }"
+  addStyles(css, _document)
+}
+
+/**
+ * Add CSS rules as a STYLE element in the head of the given document
+ * @function
+ * @private
+ * @param {string} cssString The CSS rules as a text string
+ * @param {Document} _document The given document
+ */
+function addStyles (cssString, _document) {
+  var styleNode = _document.createElement('style')
+  styleNode.setAttribute('type', 'text/css')
+  styleNode.innerText = cssString
+
+  _document.head.appendChild(styleNode)
+}
+
+function setParagraphVisibility (_doc, show) {
+  if (show) {
+    $(_doc.body).addClass('mce-show-paragraphs')
+  } else {
+    $(_doc.body).removeClass('mce-show-paragraphs')
+  }
+}
+
+},{}],5:[function(require,module,exports){
 'use strict'
 
 var $ = window.jQuery
@@ -350,7 +488,7 @@ function createColorPickAction (editor) {
   }
 }
 
-},{"./dom/styles/set-styles":3}],5:[function(require,module,exports){
+},{"./dom/styles/set-styles":4}],6:[function(require,module,exports){
 'use strict'
 
 var uiHelpers = require('./helpers')
@@ -496,7 +634,7 @@ function createGeneralTab () {
   return generalTab
 }
 
-},{"../event-handlers":4,"./helpers":6}],6:[function(require,module,exports){
+},{"../event-handlers":5,"./helpers":7}],7:[function(require,module,exports){
 /**
  * This file contains the source code for the module `lib/ui/helpers`
  * @file
@@ -685,7 +823,7 @@ function createColorPicker (label, name, callback) {
   }
 }
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict'
 
 var eventHandlers = require('../event-handlers')
@@ -781,7 +919,7 @@ function openMainWinFunction (editor) {
   }
 }
 
-},{"../dom/find-nodes":1,"../event-handlers":4,"../units":8,"./components":5}],8:[function(require,module,exports){
+},{"../dom/find-nodes":2,"../event-handlers":5,"../units":9,"./components":6}],9:[function(require,module,exports){
 'use strict'
 
 var getStyles = require('./dom/styles/get-styles')
@@ -951,7 +1089,7 @@ function createDpiTestElements () {
   body.appendChild(dpiTestElement)
 }
 
-},{"./dom/styles/get-styles":2}],9:[function(require,module,exports){
+},{"./dom/styles/get-styles":3}],10:[function(require,module,exports){
 /**
  * Plugin source main file
  * @file
@@ -967,15 +1105,29 @@ function createDpiTestElements () {
 
 var mainWindow = require('./lib/ui/main-window')
 var eventHandlers = require('./lib/event-handlers')
+var setStyles = require('./lib/dom/styles/set-styles')
+var showParagraphComponent = require('./components/show-paragraphs')
 
 var tinymce = window.tinymce
 
 tinymce.PluginManager.add('paragraph', ParagraphPlugin)
 
 function ParagraphPlugin (editor) {
+  var _doc
+
   // Check if selected text node is a direct chid of a div element.
   // If it does, wrap the text node in a new p element
   editor.on('change', eventHandlers.ensureParagraphWrapsTextNodeOnChange(editor))
+
+  editor.on('init', function () {
+    _doc = editor.getDoc()
+
+    // Overrides custom paragraph borders when visualblock is enabled
+    setStyles.overridesCustomBordersOnVisualblocks(_doc)
+
+    // Add CSS rules to show paragraphs
+    setStyles.addCssRulesToShowParagraphes(_doc)
+  })
 
   editor.addMenuItem('paragraph', {
     separator: 'before',
@@ -983,6 +1135,8 @@ function ParagraphPlugin (editor) {
     context: 'format',
     onclick: mainWindow.openMainWinFunction(editor)
   })
+
+  showParagraphComponent.init(editor)
 }
 
-},{"./lib/event-handlers":4,"./lib/ui/main-window":7}]},{},[9]);
+},{"./components/show-paragraphs":1,"./lib/dom/styles/set-styles":4,"./lib/event-handlers":5,"./lib/ui/main-window":8}]},{},[10]);
