@@ -154,6 +154,17 @@ function overridesCustomBordersOnVisualblocks (_document) {
   addStyles(css, _document)
 }
 
+/**
+ * Add "show paragraphes" style to the document
+ * @method
+ * @static
+ * @param {Document} _document The active editor's document
+ * @returns {undefined}
+ */
+function addCssRulesToShowParagraphes (_document) {
+  var css = ".mce-show-paragraphs p > span::after { content: '¶' }"
+  addStyles(css, _document)
+}
 
 /**
  * Add CSS rules as a STYLE element in the head of the given document
