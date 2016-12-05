@@ -10,7 +10,8 @@ module.exports = {
   setBorders: setBorders,
   overridesCustomBordersOnVisualblocks: overridesCustomBordersOnVisualblocks,
   addCssRulesToShowParagraphes: addCssRulesToShowParagraphes,
-  setParagraphVisibility: setParagraphVisibility
+  setParagraphVisibility: setParagraphVisibility,
+  addCssRulesToAddParagraphIcon: addCssRulesToAddParagraphIcon
 }
 
 function setTextIndent (dom, paragraph, cssData) {
@@ -167,6 +168,15 @@ function overridesCustomBordersOnVisualblocks (_document) {
  */
 function addCssRulesToShowParagraphes (_document) {
   var css = ".mce-show-paragraphs p > span::after { content: '¶' }"
+  addStyles(css, _document)
+}
+
+function addCssRulesToAddParagraphIcon (_document) {
+  var css = [
+    '.mce-ico.mce-i-paragraph { position: relative; top:-5px; font-weight: bold; font-size: 1.5em; text-align: right; }',
+    ".mce-ico.mce-i-paragraph:before { content: '¶' }"
+  ]
+  .join('\n')
   addStyles(css, _document)
 }
 
