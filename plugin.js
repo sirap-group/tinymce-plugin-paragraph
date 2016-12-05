@@ -14,12 +14,14 @@ function init (editor) {
   editor.addButton('showparagraphs', {
     title: 'Show paragraphs',
     cmd: commandName,
+    icon: 'paragraph',
     onPostRender: toggleActiveState
   })
 
   editor.addMenuItem('showparagraphs', {
     text: 'Show paragraphs',
     cmd: commandName,
+    icon: 'paragraph',
     onPostRender: toggleActiveState,
     selectable: true,
     context: 'view',
@@ -215,7 +217,8 @@ module.exports = {
   setBorders: setBorders,
   overridesCustomBordersOnVisualblocks: overridesCustomBordersOnVisualblocks,
   addCssRulesToShowParagraphes: addCssRulesToShowParagraphes,
-  setParagraphVisibility: setParagraphVisibility
+  setParagraphVisibility: setParagraphVisibility,
+  addCssRulesToAddParagraphIcon: addCssRulesToAddParagraphIcon
 }
 
 function setTextIndent (dom, paragraph, cssData) {
@@ -372,6 +375,15 @@ function overridesCustomBordersOnVisualblocks (_document) {
  */
 function addCssRulesToShowParagraphes (_document) {
   var css = ".mce-show-paragraphs p > span::after { content: '¶' }"
+  addStyles(css, _document)
+}
+
+function addCssRulesToAddParagraphIcon (_document) {
+  var css = [
+    '.mce-ico.mce-i-paragraph { position: relative; top:-5px; font-weight: bold; font-size: 1.5em; text-align: right; }',
+    ".mce-ico.mce-i-paragraph:before { content: '¶' }"
+  ]
+  .join('\n')
   addStyles(css, _document)
 }
 
@@ -1127,6 +1139,7 @@ function ParagraphPlugin (editor) {
 
     // Add CSS rules to show paragraphs
     setStyles.addCssRulesToShowParagraphes(_doc)
+    setStyles.addCssRulesToAddParagraphIcon(_doc)
   })
 
   editor.addMenuItem('paragraph', {
