@@ -13,6 +13,7 @@
 
 var mainWindow = require('./lib/ui/main-window')
 var eventHandlers = require('./lib/event-handlers')
+var setStyles = require('./lib/dom/styles/set-styles')
 
 var tinymce = window.tinymce
 
@@ -22,6 +23,11 @@ function ParagraphPlugin (editor) {
   // Check if selected text node is a direct chid of a div element.
   // If it does, wrap the text node in a new p element
   editor.on('change', eventHandlers.ensureParagraphWrapsTextNodeOnChange(editor))
+
+  // Overrides custom paragraph borders when visualblock is enabled
+  editor.on('init', function () {
+    setStyles.overridesCustomBordersOnVisualblocks(editor.getDoc())
+  })
 
   editor.addMenuItem('paragraph', {
     separator: 'before',

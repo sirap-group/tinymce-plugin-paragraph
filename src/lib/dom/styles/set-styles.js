@@ -5,7 +5,8 @@ module.exports = {
   setLineHeight: setLineHeight,
   setPaddings: setPaddings,
   setMargins: setMargins,
-  setBorders: setBorders
+  setBorders: setBorders,
+  overridesCustomBordersOnVisualblocks: overridesCustomBordersOnVisualblocks
 }
 
 function setTextIndent (dom, paragraph, cssData) {
@@ -129,4 +130,30 @@ function setBorders (dom, paragraph, cssData) {
       dom.setStyle(paragraph, 'border-color', cssData.borderColor)
     }
   }
+}
+
+/**
+ * Overrides the custom borders when visualblocks option is enabled
+ * @method
+ * @static
+ * @param {Document} _document The active editor's document
+ * @returns {undefined}
+ */
+function overridesCustomBordersOnVisualblocks (_document) {
+  var css = [
+    'p[style]',
+    'ul[style]',
+    'section[style]',
+    'div[style]'
+  ].map(function (s) {
+    return '.mce-visualblocks ' + s
+  })
+  .join(',')
+  .concat('{ border: 1px dashed #BBB !important; }')
+
+  var styleNode = _document.createElement('style')
+  styleNode.setAttribute('type', 'text/css')
+  styleNode.innerText = css
+
+  _document.head.appendChild(styleNode)
 }
