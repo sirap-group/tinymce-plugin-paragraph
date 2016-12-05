@@ -175,8 +175,7 @@ function addCssRulesToAddParagraphIcon (_document) {
   var css = [
     '.mce-ico.mce-i-paragraph { position: relative; top:-5px; font-weight: bold; font-size: 1.5em; text-align: right; }',
     ".mce-ico.mce-i-paragraph:before { content: '¶' }"
-  ]
-  .join('\n')
+  ].join('')
   addStyles(css, _document)
 }
 
