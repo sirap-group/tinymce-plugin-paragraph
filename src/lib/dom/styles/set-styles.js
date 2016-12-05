@@ -154,6 +154,14 @@ function overridesCustomBordersOnVisualblocks (_document) {
   addStyles(css, _document)
 }
 
+
+/**
+ * Add CSS rules as a STYLE element in the head of the given document
+ * @function
+ * @private
+ * @param {string} cssString The CSS rules as a text string
+ * @param {Document} _document The given document
+ */
 function addStyles (cssString, _document) {
   var styleNode = _document.createElement('style')
   styleNode.setAttribute('type', 'text/css')
