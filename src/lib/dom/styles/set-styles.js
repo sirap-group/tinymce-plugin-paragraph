@@ -151,9 +151,13 @@ function overridesCustomBordersOnVisualblocks (_document) {
   .join(',')
   .concat('{ border: 1px dashed #BBB !important; }')
 
+  addStyles(css, _document)
+}
+
+function addStyles (cssString, _document) {
   var styleNode = _document.createElement('style')
   styleNode.setAttribute('type', 'text/css')
-  styleNode.innerText = css
+  styleNode.innerText = cssString
 
   _document.head.appendChild(styleNode)
 }
