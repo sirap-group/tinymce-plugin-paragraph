@@ -1,5 +1,7 @@
 'use strict'
 
+var $ = window.jQuery
+
 module.exports = {
   setTextIndent: setTextIndent,
   setLineHeight: setLineHeight,
@@ -7,7 +9,8 @@ module.exports = {
   setMargins: setMargins,
   setBorders: setBorders,
   overridesCustomBordersOnVisualblocks: overridesCustomBordersOnVisualblocks,
-  addCssRulesToShowParagraphes: addCssRulesToShowParagraphes
+  addCssRulesToShowParagraphes: addCssRulesToShowParagraphes,
+  setParagraphVisibility: setParagraphVisibility
 }
 
 function setTextIndent (dom, paragraph, cssData) {
@@ -180,4 +183,12 @@ function addStyles (cssString, _document) {
   styleNode.innerText = cssString
 
   _document.head.appendChild(styleNode)
+}
+
+function setParagraphVisibility (_doc, show) {
+  if (show) {
+    $(_doc.body).addClass('mce-show-paragraphs')
+  } else {
+    $(_doc.body).removeClass('mce-show-paragraphs')
+  }
 }
