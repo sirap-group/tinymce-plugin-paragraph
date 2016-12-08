@@ -5,38 +5,18 @@ var getStyles = require('./lib/dom/styles/get-styles')
 
 module.exports = {
   collapsedSelectionInASpan: collapsedSelectionInASpan,
-  eachSpanWrappedInAParagraph: eachSpanWrappedInAParagraph,
-  spanInAParagraph: spanInAParagraph
+  spanInAParagraph: spanInAParagraph,
+  spanFontConfigDefined: spanFontConfigDefined,
+  eachSpanWrappedInAParagraph: eachSpanWrappedInAParagraph
 }
 
-function spanInAParagraph (evt) {
-  var blockDisplays = ['block', 'inline-block', 'table-cell']
-  var editor = evt.target
-  var parents = evt.parents
-  var wrapped = false
-  $.each(parents, function () {
-    if (this.nodeName === 'SPAN') {
-      var element = this
-      var $element = $(element)
-      var $parentParagraph = $element.closest('p')
-      if (!$parentParagraph.length) {
-        var $newParagraph = $('<p>')
-        $.each(parents, function (i) {
-          if (!wrapped) {
-            var itemDisplay = getStyles.getComputed(this).display
-            if (~blockDisplays.indexOf(itemDisplay)) {
-              editor.undoManager.transact(function () {
-                $element.wrap($newParagraph)
-              })
-              wrapped = true
-            }
-          }
-        })
-      }
-    }
-  })
-}
-
+/**
+ * Force an Element without children to be wrapped in a SPAN on selected (when NodeChange is fired on it with collapsed selection)
+ * @method
+ * @static
+ * @param {Event} evt The event object
+ * @returns {undefined}
+ */
 function collapsedSelectionInASpan (evt) {
   var editor = evt.target
   var element = evt.element
@@ -88,6 +68,86 @@ function collapsedSelectionInASpan (evt) {
 }
 
 /**
+ * Force a span to be wrapped in a paragraph on selected (when NodeChange is fired on it)
+ * @method
+ * @static
+ * @param {Event} evt The event object
+ * @returns {undefined}
+ */
+function spanInAParagraph (evt) {
+  var blockDisplays = ['block', 'inline-block', 'table-cell']
+  var editor = evt.target
+  var parents = evt.parents
+  var wrapped = false
+  $.each(parents, function () {
+    if (this.nodeName === 'SPAN') {
+      var element = this
+      var $element = $(element)
+      var $parentParagraph = $element.closest('p')
+      if (!$parentParagraph.length) {
+        var $newParagraph = $('<p>')
+        $.each(parents, function (i) {
+          if (!wrapped) {
+            var itemDisplay = getStyles.getComputed(this).display
+            if (~blockDisplays.indexOf(itemDisplay)) {
+              editor.undoManager.transact(function () {
+                $element.wrap($newParagraph)
+              })
+              wrapped = true
+            }
+          }
+        })
+      }
+    }
+  })
+}
+
+/**
+ * Force a span to be font family and font size defined on selected (when NodeChange is fired on it)
+ * @method
+ * @static
+ * @param {Event} evt The event object
+ * @returns {undefined}
+ */
+function spanFontConfigDefined (evt) {
+  var editor = evt.target
+  var element = evt.element
+  // var parents = evt.parents
+  if (element.nodeName === 'SPAN') {
+    // var computedStyle = getStyles.getComputed(element)
+    var closestFontConfig
+    if (!element.style.fontFamily || !element.style.fontSize) {
+      editor.undoManager.transact(function () {
+        if (!element.style.fontFamily) {
+          closestFontConfig = getStyles.getClosestFontConfig(element, 'Calibri', '12pt', editor)
+          element.style.fontFamily = closestFontConfig.fontFamily
+        }
+        if (!element.style.fontSize) {
+          if (!closestFontConfig) {
+            closestFontConfig = getStyles.getClosestFontConfig(element, 'Calibri', '12pt', editor)
+          }
+          element.style.fontSize = closestFontConfig.fontSize
+        }
+      })
+    }
+  }
+}
+
+/**
+* Force each SPAN element in the doc to be wrapped in a Paragraph element
+* @method
+* @static
+*/
+function eachSpanWrappedInAParagraph (evt) {
+  var editor = evt.target
+  var body = editor.getBody()
+  var $span = $('span', body)
+  console.log(evt.type, evt)
+  console.log('$span', $span)
+  // console.log('editor', editor)
+}
+
+/**
  * Create a new SPAN with the closest font config
  * @function
  * @inner
@@ -97,18 +157,4 @@ function collapsedSelectionInASpan (evt) {
 function createNewSpan (closestElement, editor) {
   var closestFontConfig = getStyles.getClosestFontConfig(closestElement, 'Calibri', '12pt', editor)
   return $('<span>').attr('style', 'font-family: ' + closestFontConfig.fontFamily + '; font-size:' + closestFontConfig.fontSize)
-}
-
-/**
- * Force each SPAN element in the doc to be wrapped in a Paragraph element
- * @method
- * @static
- */
-function eachSpanWrappedInAParagraph (evt) {
-  var editor = evt.target
-  var body = editor.getBody()
-  var $span = $('span', body)
-  console.log(evt.type, evt)
-  console.log('$span', $span)
-  // console.log('editor', editor)
 }
