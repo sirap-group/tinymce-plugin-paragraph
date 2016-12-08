@@ -6,7 +6,7 @@ var getStyles = require('./lib/dom/styles/get-styles')
 module.exports = {
   collapsedSelectionInASpanOnNodeChange: collapsedSelectionInASpanOnNodeChange,
   spanInAParagraphOnNodeChange: spanInAParagraphOnNodeChange,
-  spanFontConfigDefined: spanFontConfigDefined,
+  spanFontConfigDefinedOnNodeChange: spanFontConfigDefinedOnNodeChange,
   checkAllOnSetContent: checkAllOnSetContent,
   eachSpanWrappedInAParagraph: eachSpanWrappedInAParagraph
 }
@@ -42,28 +42,8 @@ function spanInAParagraphOnNodeChange (evt) {
  * @param {Event} evt The event object
  * @returns {undefined}
  */
-function spanFontConfigDefined (evt) {
-  var editor = evt.target
-  var element = evt.element
-  // var parents = evt.parents
-  if (element.nodeName === 'SPAN') {
-    // var computedStyle = getStyles.getComputed(element)
-    var closestFontConfig
-    if (!element.style.fontFamily || !element.style.fontSize) {
-      editor.undoManager.transact(function () {
-        if (!element.style.fontFamily) {
-          closestFontConfig = getStyles.getClosestFontConfig(element, 'Calibri', '12pt', editor)
-          element.style.fontFamily = closestFontConfig.fontFamily
-        }
-        if (!element.style.fontSize) {
-          if (!closestFontConfig) {
-            closestFontConfig = getStyles.getClosestFontConfig(element, 'Calibri', '12pt', editor)
-          }
-          element.style.fontSize = closestFontConfig.fontSize
-        }
-      })
-    }
-  }
+function spanFontConfigDefinedOnNodeChange (evt) {
+  spanFontConfigDefined(evt.target, evt.element)
 }
 
 function checkAllOnSetContent (evt) {
@@ -175,6 +155,38 @@ function spanInAParagraph (editor, parents) {
     }
   })
   return wrapped
+}
+
+/**
+ * Force a span to be font family and font size defined
+ * @function
+ * @inner
+ * @param {Editor} editor The tinymce active editor
+ * @param {Element} element The element on which do the check
+ * @returns {Boolean} If the element's style has changed
+ */
+function spanFontConfigDefined (editor, element) {
+  if (element.nodeName === 'SPAN') {
+    // var computedStyle = getStyles.getComputed(element)
+    var closestFontConfig
+    if (!element.style.fontFamily || !element.style.fontSize) {
+      editor.undoManager.transact(function () {
+        if (!element.style.fontFamily) {
+          closestFontConfig = getStyles.getClosestFontConfig(element, 'Calibri', '12pt', editor)
+          element.style.fontFamily = closestFontConfig.fontFamily
+        }
+        if (!element.style.fontSize) {
+          if (!closestFontConfig) {
+            closestFontConfig = getStyles.getClosestFontConfig(element, 'Calibri', '12pt', editor)
+          }
+          element.style.fontSize = closestFontConfig.fontSize
+        }
+      })
+      return true
+    } else {
+      return false
+    }
+  }
 }
 
 /**

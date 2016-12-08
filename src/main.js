@@ -43,7 +43,7 @@ function ParagraphPlugin (editor) {
 
   editor.on('NodeChange', checks.collapsedSelectionInASpanOnNodeChange)
   editor.on('NodeChange', checks.spanInAParagraphOnNodeChange)
-  editor.on('NodeChange', checks.spanFontConfigDefined)
+  editor.on('NodeChange', checks.spanFontConfigDefinedOnNodeChange)
   // editor.on('SetContent', checks.checkAllOnSetContent)
 
   editor.addMenuItem('paragraph', {
