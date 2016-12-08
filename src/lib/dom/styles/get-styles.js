@@ -1,9 +1,11 @@
 'use strict'
 
+var $ = window.jQuery
 var getComputedStyle = window.getComputedStyle
 
 module.exports = {
-  getComputed: getComputed
+  getComputed: getComputed,
+  getClosestFontConfig: getClosestFontConfig
 }
 
 /**
@@ -31,5 +33,86 @@ function getComputed (element, cssRuleName) {
     }
   } else {
     throw new Error('Error trying to get computed style. It seems your browser doesnt support it.')
+  }
+}
+
+/**
+ * Search the closest span element for wich font size and family is defined. Begins with previous, then next, and finally search through the ancestors and their children
+ * @method
+ * @param {DOMNode} the node from wich the search starts
+ * @returns {null|FontConfig}
+ */
+function getClosestFontConfig (node, defaultFamily, defaultSize, editor) {
+  var $node = $(node)
+  var $currentNode
+  var found, $found
+
+  // is node ok itself ?
+  $currentNode = $node.filter(fontConfigFilter)
+  if ($currentNode.length) {
+    $found = $currentNode
+  } else {
+    var $allNodes = $('*', editor.getDoc())
+    var nodePosition = $allNodes.index(node)
+
+    var $allSpans = $('span', editor.getDoc()).filter(fontConfigFilter)
+    var allSpanPositions = $allSpans.map(function (i, el) {
+      return $allNodes.index(el)
+    })
+
+    var lowerPositions = []
+    var greaterPositions = []
+    $.each(allSpanPositions, function (i, documentPosition) {
+      if (documentPosition < nodePosition) {
+        lowerPositions.push(documentPosition)
+      } else if (documentPosition > nodePosition) {
+        greaterPositions.push(documentPosition)
+      }
+    })
+
+    var prevIndex = Math.max.apply(null, lowerPositions)
+    var nextIndex = Math.min.apply(null, greaterPositions)
+
+    if (!isNaN(prevIndex) && isFinite(prevIndex)) {
+      found = $allNodes[prevIndex]
+    } else if (!isNaN(nextIndex) && isFinite(nextIndex)) {
+      found = $allNodes[nextIndex]
+    }
+    if (found) {
+      $found = $(found)
+    }
+  }
+
+  if ($found) {
+    return getConfigFromElement($found)
+  } else {
+    return {
+      fontFamily: defaultFamily,
+      fontSize: defaultSize
+    }
+  }
+}
+
+/**
+ * A jquery filter to filter span elements having fontFamily and fontSize defined
+ * @function
+ * @inner
+ * @returns {boolean} true|false
+ */
+function fontConfigFilter () {
+  return (this.style.fontFamily && this.style.fontSize)
+}
+
+/**
+ * A handy function to return a FontConfig type object from the element styles values
+ * @function
+ * @inner
+ * @param {jQuery} $element A jQuery object from the element to lookup the font style rules
+ * @returns {FontConfig} the resulting fontConfig object
+ */
+function getConfigFromElement ($element) {
+  return {
+    fontFamily: $element[0].style.fontFamily,
+    fontSize: $element[0].style.fontSize
   }
 }
