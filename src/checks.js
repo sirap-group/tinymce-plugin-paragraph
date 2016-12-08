@@ -4,7 +4,7 @@ var $ = window.jQuery
 var getStyles = require('./lib/dom/styles/get-styles')
 
 module.exports = {
-  collapsedSelectionInASpan: collapsedSelectionInASpan,
+  collapsedSelectionInASpanOnNodeChange: collapsedSelectionInASpanOnNodeChange,
   spanInAParagraph: spanInAParagraph,
   spanFontConfigDefined: spanFontConfigDefined,
   eachSpanWrappedInAParagraph: eachSpanWrappedInAParagraph
@@ -17,54 +17,8 @@ module.exports = {
  * @param {Event} evt The event object
  * @returns {undefined}
  */
-function collapsedSelectionInASpan (evt) {
-  var editor = evt.target
-  var element = evt.element
-  var parents = evt.parents
-
-  // ignore the uncollapsed selections
-  if (editor.selection.isCollapsed() && !element.children.length) {
-    var $element = $(element)
-    var blockDisplays = ['block', 'inline-block', 'list-item', 'table-cell']
-    var elementDisplay = getStyles.getComputed(element).display
-
-    var $newSpan = createNewSpan(element, editor)
-    if (element.tagName === 'BR' && $element.attr('data-mce-bogus') && parents[1].tagName !== 'SPAN') {
-      // if we have something like <x><br data-mce-bogus/></x>
-      // where X is not SPAN, we wrap the BR element by a SPAN element
-      editor.undoManager.transact(function () {
-        $element.wrap($newSpan)
-      })
-    } else if (~blockDisplays.indexOf(elementDisplay)) {
-      // or if we are in a block, append a new span with a new bogus element into
-
-      // create new SPAN and BR[bogus] elements
-      var $newBogus = $('<br>').attr('data-mce-bogus', 1)
-
-      editor.undoManager.transact(function () {
-        // create the proper DOM tree, for example P>SPAN>BR
-        var children = element.childNodes
-        var nodeToSelect
-        var lastChild = children[children.length - 1]
-        if (children.length === 1 && lastChild.nodeName === '#text' && !lastChild.textContent.trim()) {
-          element.removeChild(lastChild)
-        }
-        if (children.length) {
-          $newSpan.wrapInner(children)
-          nodeToSelect = $newSpan[0].lastChild
-        } else {
-          $newSpan.append($newBogus)
-          nodeToSelect = $newBogus[0]
-        }
-        $element.append($newSpan)
-
-        // and reset the cursor location into the newSpan
-        editor.selection.select(nodeToSelect)
-        editor.selection.collapse()
-        editor.selection.setCursorLocation(nodeToSelect, 0)
-      })
-    }
-  }
+function collapsedSelectionInASpanOnNodeChange (evt) {
+  collapsedSelectionInASpan(evt.target, evt.element, evt.parents)
 }
 
 /**
@@ -145,6 +99,60 @@ function eachSpanWrappedInAParagraph (evt) {
   console.log(evt.type, evt)
   console.log('$span', $span)
   // console.log('editor', editor)
+}
+
+/**
+ * Force an Element without children to be wrapped in a SPAN
+ * @function
+ * @inner
+ * @param {Editor} editor The tinymce active editor
+ * @param {Element} element The element on which do the check
+ * @param {NodeList} parents The parents of the element
+ */
+function collapsedSelectionInASpan (editor, element, parents) {
+  // ignore the uncollapsed selections
+  if (editor.selection.isCollapsed() && !element.children.length) {
+    var $element = $(element)
+    var blockDisplays = ['block', 'inline-block', 'list-item', 'table-cell']
+    var elementDisplay = getStyles.getComputed(element).display
+
+    var $newSpan = createNewSpan(element, editor)
+    if (element.tagName === 'BR' && $element.attr('data-mce-bogus') && parents[1].tagName !== 'SPAN') {
+      // if we have something like <x><br data-mce-bogus/></x>
+      // where X is not SPAN, we wrap the BR element by a SPAN element
+      editor.undoManager.transact(function () {
+        $element.wrap($newSpan)
+      })
+    } else if (~blockDisplays.indexOf(elementDisplay)) {
+      // or if we are in a block, append a new span with a new bogus element into
+
+      // create new SPAN and BR[bogus] elements
+      var $newBogus = $('<br>').attr('data-mce-bogus', 1)
+
+      editor.undoManager.transact(function () {
+        // create the proper DOM tree, for example P>SPAN>BR
+        var children = element.childNodes
+        var nodeToSelect
+        var lastChild = children[children.length - 1]
+        if (children.length === 1 && lastChild.nodeName === '#text' && !lastChild.textContent.trim()) {
+          element.removeChild(lastChild)
+        }
+        if (children.length) {
+          $newSpan.wrapInner(children)
+          nodeToSelect = $newSpan[0].lastChild
+        } else {
+          $newSpan.append($newBogus)
+          nodeToSelect = $newBogus[0]
+        }
+        $element.append($newSpan)
+
+        // and reset the cursor location into the newSpan
+        editor.selection.select(nodeToSelect)
+        editor.selection.collapse()
+        editor.selection.setCursorLocation(nodeToSelect, 0)
+      })
+    }
+  }
 }
 
 /**
