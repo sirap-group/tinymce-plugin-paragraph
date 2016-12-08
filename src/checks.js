@@ -6,6 +6,7 @@ var getStyles = require('./lib/dom/styles/get-styles')
 module.exports = {
   collapsedSelectionInASpan: collapsedSelectionInASpan,
   spanInAParagraph: spanInAParagraph,
+  spanFontConfigDefined: spanFontConfigDefined,
   eachSpanWrappedInAParagraph: eachSpanWrappedInAParagraph
 }
 
@@ -99,6 +100,37 @@ function spanInAParagraph (evt) {
       }
     }
   })
+}
+
+/**
+ * Force a span to be font family and font size defined on selected (when NodeChange is fired on it)
+ * @method
+ * @static
+ * @param {Event} evt The event object
+ * @returns {undefined}
+ */
+function spanFontConfigDefined (evt) {
+  var editor = evt.target
+  var element = evt.element
+  // var parents = evt.parents
+  if (element.nodeName === 'SPAN') {
+    // var computedStyle = getStyles.getComputed(element)
+    var closestFontConfig
+    if (!element.style.fontFamily || !element.style.fontSize) {
+      editor.undoManager.transact(function () {
+        if (!element.style.fontFamily) {
+          closestFontConfig = getStyles.getClosestFontConfig(element, 'Calibri', '12pt', editor)
+          element.style.fontFamily = closestFontConfig.fontFamily
+        }
+        if (!element.style.fontSize) {
+          if (!closestFontConfig) {
+            closestFontConfig = getStyles.getClosestFontConfig(element, 'Calibri', '12pt', editor)
+          }
+          element.style.fontSize = closestFontConfig.fontSize
+        }
+      })
+    }
+  }
 }
 
 /**
