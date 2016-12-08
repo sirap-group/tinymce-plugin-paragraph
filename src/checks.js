@@ -7,6 +7,7 @@ module.exports = {
   collapsedSelectionInASpanOnNodeChange: collapsedSelectionInASpanOnNodeChange,
   spanInAParagraph: spanInAParagraph,
   spanFontConfigDefined: spanFontConfigDefined,
+  checkAllOnSetContent: checkAllOnSetContent,
   eachSpanWrappedInAParagraph: eachSpanWrappedInAParagraph
 }
 
@@ -84,6 +85,14 @@ function spanFontConfigDefined (evt) {
         }
       })
     }
+  }
+}
+
+function checkAllOnSetContent (evt) {
+  console.log('checkAllOnSetContent', evt)
+  if (evt.type === 'setcontent' && evt.format === 'html' && evt.content.trim() && evt.set) {
+    // var editor = evt.target
+    // var body = editor.getBody()
   }
 }
 

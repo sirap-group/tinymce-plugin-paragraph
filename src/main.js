@@ -44,6 +44,7 @@ function ParagraphPlugin (editor) {
   editor.on('NodeChange', checks.collapsedSelectionInASpanOnNodeChange)
   editor.on('NodeChange', checks.spanInAParagraph)
   editor.on('NodeChange', checks.spanFontConfigDefined)
+  // editor.on('SetContent', checks.checkAllOnSetContent)
 
   editor.addMenuItem('paragraph', {
     separator: 'before',
