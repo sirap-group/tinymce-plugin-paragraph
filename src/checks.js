@@ -128,7 +128,7 @@ function collapsedSelectionInASpan (editor, element, parents) {
  * @inner
  * @param {Editor} editor The tinymce active editor
  * @param {NodeList} parents The parents of the element
- * @returns {Boolean} If the element was wrapped
+ * @returns {Boolean} If the element has been wrapped
  */
 function spanInAParagraph (editor, parents) {
   var blockDisplays = ['block', 'inline-block', 'table-cell']
