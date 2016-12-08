@@ -66,6 +66,13 @@ function collapsedSelectionInASpan (evt) {
   }
 }
 
+/**
+ * Force a span to be wrapped in a paragraph on selected (when NodeChange is fired on it)
+ * @method
+ * @static
+ * @param {Event} evt The event object
+ * @returns {undefined}
+ */
 function spanInAParagraph (evt) {
   var blockDisplays = ['block', 'inline-block', 'table-cell']
   var editor = evt.target
