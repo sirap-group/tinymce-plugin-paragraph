@@ -15,6 +15,7 @@ var mainWindow = require('./lib/ui/main-window')
 var eventHandlers = require('./lib/event-handlers')
 var setStyles = require('./lib/dom/styles/set-styles')
 var showParagraphComponent = require('./components/show-paragraphs')
+var checks = require('./checks')
 
 var tinymce = window.tinymce
 
@@ -25,7 +26,7 @@ function ParagraphPlugin (editor) {
 
   // Check if selected text node is a direct chid of a div element.
   // If it does, wrap the text node in a new p element
-  editor.on('change', eventHandlers.ensureParagraphWrapsTextNodeOnChange(editor))
+  editor.on('change', eventHandlers.ensureParagraphWrapsTextNode)
 
   editor.on('init', function () {
     _doc = editor.getDoc()
@@ -37,6 +38,12 @@ function ParagraphPlugin (editor) {
     setStyles.addCssRulesToShowParagraphes(_doc)
     setStyles.addCssRulesToAddParagraphIcon(window.document)
   })
+
+  // editor.on('SetContent', checks.eachSpanWrappedInAParagraph)
+
+  editor.on('NodeChange', checks.collapsedSelectionInASpan)
+  editor.on('NodeChange', checks.spanInAParagraph)
+  editor.on('NodeChange', checks.spanFontConfigDefined)
 
   editor.addMenuItem('paragraph', {
     separator: 'before',
