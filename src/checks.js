@@ -69,6 +69,13 @@ function collapsedSelectionInASpan (evt) {
   }
 }
 
+/**
+ * Create a new SPAN with the closest font config
+ * @function
+ * @inner
+ * @param {Element} closestElement An element to search from the closest font config
+ * @returns {jQuery} the new SPAN as a jQuery object
+ */
 function createNewSpan (closestElement, editor) {
   var closestFontConfig = getStyles.getClosestFontConfig(closestElement, 'Calibri', '12pt', editor)
   return $('<span>').attr('style', 'font-style: ' + closestFontConfig.fontFamily + '; font-size:' + closestFontConfig.fontSize)
