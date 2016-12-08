@@ -5,6 +5,7 @@ var getStyles = require('./lib/dom/styles/get-styles')
 
 module.exports = {
   collapsedSelectionInASpan: collapsedSelectionInASpan,
+  eachSpanWrappedInAParagraph: eachSpanWrappedInAParagraph,
   spanInAParagraph: spanInAParagraph
 }
 
@@ -97,4 +98,17 @@ function createNewSpan (closestElement, editor) {
   var closestFontConfig = getStyles.getClosestFontConfig(closestElement, 'Calibri', '12pt', editor)
   return $('<span>').attr('style', 'font-family: ' + closestFontConfig.fontFamily + '; font-size:' + closestFontConfig.fontSize)
 }
+
+/**
+ * Force each SPAN element in the doc to be wrapped in a Paragraph element
+ * @method
+ * @static
+ */
+function eachSpanWrappedInAParagraph (evt) {
+  var editor = evt.target
+  var body = editor.getBody()
+  var $span = $('span', body)
+  console.log(evt.type, evt)
+  console.log('$span', $span)
+  // console.log('editor', editor)
 }

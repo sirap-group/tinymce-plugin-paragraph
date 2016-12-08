@@ -39,6 +39,8 @@ function ParagraphPlugin (editor) {
     setStyles.addCssRulesToAddParagraphIcon(window.document)
   })
 
+  // editor.on('SetContent', checks.eachSpanWrappedInAParagraph)
+
   editor.on('NodeChange', checks.collapsedSelectionInASpan)
   editor.on('NodeChange', checks.spanInAParagraph)
 
