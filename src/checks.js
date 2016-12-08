@@ -9,6 +9,13 @@ module.exports = {
   eachSpanWrappedInAParagraph: eachSpanWrappedInAParagraph
 }
 
+/**
+ * Force an Element without children to be wrapped in a SPAN on selected (when NodeChange is fired on it with collapsed selection)
+ * @method
+ * @static
+ * @param {Event} evt The event object
+ * @returns {undefined}
+ */
 function collapsedSelectionInASpan (evt) {
   var editor = evt.target
   var element = evt.element
