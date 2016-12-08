@@ -152,7 +152,7 @@ function appendSpanInAllEmptyBlocks (editor) {
 }
 
 /**
- * Force an Element without children to be wrapped in a SPAN
+ * Force a SPAN to be wrapped in a Paragraph or equivalent block
  * @function
  * @inner
  * @param {Editor} editor The tinymce active editor
