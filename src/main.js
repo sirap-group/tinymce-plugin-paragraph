@@ -40,6 +40,7 @@ function ParagraphPlugin (editor) {
   })
 
   editor.on('NodeChange', checks.collapsedSelectionInASpan)
+  editor.on('NodeChange', checks.spanInAParagraph)
 
   editor.addMenuItem('paragraph', {
     separator: 'before',
