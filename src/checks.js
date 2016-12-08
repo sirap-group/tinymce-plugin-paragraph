@@ -52,10 +52,12 @@ function spanFontConfigDefinedOnNodeChange (evt) {
 }
 
 function checkAllOnSetContent (evt) {
-  console.log('checkAllOnSetContent', evt)
   if (evt.type === 'setcontent' && evt.format === 'html' && evt.content.trim() && evt.set) {
-    // var editor = evt.target
+    var editor = evt.target
     // var body = editor.getBody()
+
+    // appendSpanInEmptyBlock ...
+    appendSpanInAllEmptyBlocks(editor)
   }
 }
 
