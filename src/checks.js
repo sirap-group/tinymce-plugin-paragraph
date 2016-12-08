@@ -128,6 +128,28 @@ function appendSpanInEmptyBlock (editor, element, parents, shouldSelect) {
 }
 
 /**
+ * Force all block Elements without children to be wrapped in a SPAN
+ * @function
+ * @inner
+ * @param {Editor} editor The tinymce active editor
+ */
+function appendSpanInAllEmptyBlocks (editor) {
+  var body = editor.getBody()
+  var $blocks = $('p, th, td, li', body)
+  $blocks.each(function () {
+    var element = this
+    var $parents = $(element).parentsUntil('section[data-headfoot]')
+    var parents = [element]
+    for (var i = 0; i < $parents.length; i++) {
+      parents.push($parents[i])
+    }
+    if (!element.children.length) {
+      appendSpanInEmptyBlock(editor, element, parents, false)
+    }
+  })
+}
+
+/**
  * Force an Element without children to be wrapped in a SPAN
  * @function
  * @inner
