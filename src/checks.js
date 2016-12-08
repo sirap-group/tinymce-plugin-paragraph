@@ -2,6 +2,7 @@
 
 var $ = window.jQuery
 var getStyles = require('./lib/dom/styles/get-styles')
+var findNodes = require('./lib/dom/find-nodes')
 
 module.exports = {
   appendSpanInEmptyBlockOnNodeChange: appendSpanInEmptyBlockOnNodeChange,
@@ -140,11 +141,7 @@ function appendSpanInAllEmptyBlocks (editor) {
   var $blocks = $('p, th, td, li', body)
   $blocks.each(function () {
     var element = this
-    var $parents = $(element).parentsUntil('section[data-headfoot]')
-    var parents = [element]
-    for (var i = 0; i < $parents.length; i++) {
-      parents.push($parents[i])
-    }
+    var parents = findNodes.parents(element)
     if (!element.children.length) {
       appendSpanInEmptyBlock(editor, element, parents, false)
     }

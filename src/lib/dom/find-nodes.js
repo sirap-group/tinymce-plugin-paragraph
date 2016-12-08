@@ -11,7 +11,8 @@ var Node = window.Node
 module.exports = {
   getParentParagraph: getParentParagraph,
   getSelectedParagraphes: getSelectedParagraphes,
-  getChildrenParagraphes: getChildrenParagraphes
+  getChildrenParagraphes: getChildrenParagraphes,
+  parents: parents
 }
 
 /**
@@ -95,4 +96,20 @@ function getSelectedParagraphes (selection) {
   }
 
   return paragraphes
+}
+
+/**
+ * Get a list of the parents of an element including and starting by itself, and until the page, header or footer element, excluding it.
+ * @method
+ * @static
+ * @param {Element} element The element to get its parents
+ * @returns {Array<Element>} The parent list
+ */
+function parents (element) {
+  var $parents = $(element).parentsUntil('section[data-headfoot]')
+  var parents = [element]
+  for (var i = 0; i < $parents.length; i++) {
+    parents.push($parents[i])
+  }
+  return parents
 }
