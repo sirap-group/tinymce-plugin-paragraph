@@ -4,7 +4,34 @@ var $ = window.jQuery
 var getStyles = require('./lib/dom/styles/get-styles')
 
 module.exports = {
-  collapsedSelectionInASpan: collapsedSelectionInASpan
+  collapsedSelectionInASpan: collapsedSelectionInASpan,
+  spanInAParagraph: spanInAParagraph
+}
+
+function spanInAParagraph (evt) {
+  var blockDisplays = ['block', 'inline-block', 'table-cell']
+  var editor = evt.target
+  var element = evt.element
+  var parents = evt.parents
+  var $element = $(element)
+  if (element.nodeName === 'SPAN') {
+    var $parentParagraph = $element.closest('p')
+    if (!$parentParagraph.length) {
+      var $newParagraph = $('<p>')
+      var wrapped = false
+      $.each(parents, function (i) {
+        if (!wrapped) {
+          var itemDisplay = getStyles.getComputed(this).display
+          if (~blockDisplays.indexOf(itemDisplay)) {
+            editor.undoManager.transact(function () {
+              $element.wrap($newParagraph)
+            })
+            wrapped = true
+          }
+        }
+      })
+    }
+  }
 }
 
 function collapsedSelectionInASpan (evt) {
