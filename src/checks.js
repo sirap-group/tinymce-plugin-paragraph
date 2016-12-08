@@ -33,18 +33,18 @@ function spanInAParagraph (evt) {
         })
       }
     }
-  }
+  })
 }
 
 function collapsedSelectionInASpan (evt) {
   var editor = evt.target
+  var element = evt.element
+  var parents = evt.parents
 
   // ignore the uncollapsed selections
-  if (editor.selection.isCollapsed()) {
-    var blockDisplays = ['block', 'inline-block', 'list-item', 'table-cell']
-    var element = evt.element
+  if (editor.selection.isCollapsed() && !element.children.length) {
     var $element = $(element)
-    var parents = evt.parents
+    var blockDisplays = ['block', 'inline-block', 'list-item', 'table-cell']
     var elementDisplay = getStyles.getComputed(element).display
 
     var $newSpan = createNewSpan(element, editor)
