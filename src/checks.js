@@ -5,7 +5,7 @@ var getStyles = require('./lib/dom/styles/get-styles')
 
 module.exports = {
   collapsedSelectionInASpanOnNodeChange: collapsedSelectionInASpanOnNodeChange,
-  spanInAParagraph: spanInAParagraph,
+  spanInAParagraphOnNodeChange: spanInAParagraphOnNodeChange,
   spanFontConfigDefined: spanFontConfigDefined,
   checkAllOnSetContent: checkAllOnSetContent,
   eachSpanWrappedInAParagraph: eachSpanWrappedInAParagraph
@@ -29,32 +29,10 @@ function collapsedSelectionInASpanOnNodeChange (evt) {
  * @param {Event} evt The event object
  * @returns {undefined}
  */
-function spanInAParagraph (evt) {
-  var blockDisplays = ['block', 'inline-block', 'table-cell']
+function spanInAParagraphOnNodeChange (evt) {
   var editor = evt.target
   var parents = evt.parents
-  var wrapped = false
-  $.each(parents, function () {
-    if (this.nodeName === 'SPAN') {
-      var element = this
-      var $element = $(element)
-      var $parentParagraph = $element.closest('p')
-      if (!$parentParagraph.length) {
-        var $newParagraph = $('<p>')
-        $.each(parents, function (i) {
-          if (!wrapped) {
-            var itemDisplay = getStyles.getComputed(this).display
-            if (~blockDisplays.indexOf(itemDisplay)) {
-              editor.undoManager.transact(function () {
-                $element.wrap($newParagraph)
-              })
-              wrapped = true
-            }
-          }
-        })
-      }
-    }
-  })
+  spanInAParagraph(editor, parents)
 }
 
 /**
@@ -162,6 +140,41 @@ function collapsedSelectionInASpan (editor, element, parents) {
       })
     }
   }
+}
+
+/**
+ * Force an Element without children to be wrapped in a SPAN
+ * @function
+ * @inner
+ * @param {Editor} editor The tinymce active editor
+ * @param {NodeList} parents The parents of the element
+ * @returns {Boolean} If the element was wrapped
+ */
+function spanInAParagraph (editor, parents) {
+  var blockDisplays = ['block', 'inline-block', 'table-cell']
+  var wrapped = false
+  $.each(parents, function () {
+    if (this.nodeName === 'SPAN') {
+      var element = this
+      var $element = $(element)
+      var $parentParagraph = $element.closest('p')
+      if (!$parentParagraph.length) {
+        var $newParagraph = $('<p>')
+        $.each(parents, function (i) {
+          if (!wrapped) {
+            var itemDisplay = getStyles.getComputed(this).display
+            if (~blockDisplays.indexOf(itemDisplay)) {
+              editor.undoManager.transact(function () {
+                $element.wrap($newParagraph)
+              })
+              wrapped = true
+            }
+          }
+        })
+      }
+    }
+  })
+  return wrapped
 }
 
 /**

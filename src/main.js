@@ -42,7 +42,7 @@ function ParagraphPlugin (editor) {
   // editor.on('SetContent', checks.eachSpanWrappedInAParagraph)
 
   editor.on('NodeChange', checks.collapsedSelectionInASpanOnNodeChange)
-  editor.on('NodeChange', checks.spanInAParagraph)
+  editor.on('NodeChange', checks.spanInAParagraphOnNodeChange)
   editor.on('NodeChange', checks.spanFontConfigDefined)
   // editor.on('SetContent', checks.checkAllOnSetContent)
 
