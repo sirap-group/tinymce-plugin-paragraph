@@ -23,7 +23,7 @@ function appendSpanInEmptyBlockOnNodeChange (evt) {
   // ignore the uncollapsed selections or elements with children elements
   var editor = evt.target
   var element = evt.element
-  if (editor.selection.isCollapsed() && !element.children.length) {
+  if (editor.selection.isCollapsed() && !element.children.length || (element.children.length === 1 && element.lastChild.nodeName === 'BR')) {
     appendSpanInEmptyBlock(editor, element, evt.parents, true)
   }
 }
