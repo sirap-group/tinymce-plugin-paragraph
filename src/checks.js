@@ -57,8 +57,12 @@ function checkAllOnSetContent (evt) {
     var editor = evt.target
     // var body = editor.getBody()
 
-    // appendSpanInEmptyBlock ...
+    // checks and forces that all block elements like paragraphes contain at least a span
     appendSpanInAllEmptyBlocks(editor)
+    // checks and forces that all span elements are wrapped into at least a paragraph
+    allSpanInAParagraph(editor)
+    // checks and forces that all span elements are font family and font size defined
+    allSpanFontConfigDefined(editor)
   }
 }
 
