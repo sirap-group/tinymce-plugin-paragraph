@@ -234,6 +234,20 @@ function spanFontConfigDefined (editor, element) {
 }
 
 /**
+ * Force all SPAN to be font family and font size defined
+ * @function
+ * @inner
+ * @param {Editor} editor The tinymce active editor
+ */
+function allSpanFontConfigDefined (editor) {
+  var body = editor.getBody()
+  var $spans = $('span', body)
+  $spans.each(function () {
+    spanFontConfigDefined(editor, this)
+  })
+}
+
+/**
  * Create a new SPAN with the closest font config
  * @function
  * @inner
