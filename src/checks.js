@@ -184,6 +184,24 @@ function spanInAParagraph (editor, parents) {
 }
 
 /**
+ * Force all SPAN to be wrapped by a paragraph
+ * @function
+ * @inner
+ * @param {Editor} editor The tinymce active editor
+ */
+function allSpanInAParagraph (editor) {
+  var body = editor.getBody()
+  var $spans = $('span', body)
+  $spans.each(function () {
+    var element = this
+    var parents = findNodes.parents(element)
+    if (!element.children.length) {
+      spanInAParagraph(editor, parents)
+    }
+  })
+}
+
+/**
  * Force a span to be font family and font size defined
  * @function
  * @inner
