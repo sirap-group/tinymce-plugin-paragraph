@@ -91,9 +91,9 @@ function appendSpanInEmptyBlock (editor, element, parents, shouldSelect) {
   var elementDisplay = getStyles.getComputed(element).display
 
   var $newSpan = createNewSpan(element, editor)
-  if (element.tagName === 'BR' && $element.attr('data-mce-bogus') && parents[1].tagName !== 'SPAN') {
-    // if we have something like <x><br data-mce-bogus/></x>
-    // where X is not SPAN, we wrap the BR element by a SPAN element
+  if (element.tagName === 'BR' && parents[1].tagName !== 'SPAN') {
+    // if we have something like `<x><br></x>` where `<x>` is not `<span>`,
+    // we wrap the BR element with a new SPAN element
     editor.undoManager.transact(function () {
       $element.wrap($newSpan)
     })
