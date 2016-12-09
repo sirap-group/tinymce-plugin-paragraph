@@ -8,8 +8,7 @@ module.exports = {
   appendSpanInEmptyBlockOnNodeChange: appendSpanInEmptyBlockOnNodeChange,
   spanInAParagraphOnNodeChange: spanInAParagraphOnNodeChange,
   spanFontConfigDefinedOnNodeChange: spanFontConfigDefinedOnNodeChange,
-  checkAllOnSetContent: checkAllOnSetContent,
-  eachSpanWrappedInAParagraph: eachSpanWrappedInAParagraph
+  checkAllOnSetContent: checkAllOnSetContent
 }
 
 /**
@@ -64,20 +63,6 @@ function checkAllOnSetContent (evt) {
     // checks and forces that all span elements are font family and font size defined
     allSpanFontConfigDefined(editor)
   }
-}
-
-/**
-* Force each SPAN element in the doc to be wrapped in a Paragraph element
-* @method
-* @static
-*/
-function eachSpanWrappedInAParagraph (evt) {
-  var editor = evt.target
-  var body = editor.getBody()
-  var $span = $('span', body)
-  console.log(evt.type, evt)
-  console.log('$span', $span)
-  // console.log('editor', editor)
 }
 
 /**
