@@ -131,7 +131,7 @@ function appendSpanInAllEmptyBlocks (editor) {
   $blocks.each(function () {
     var element = this
     var parents = findNodes.parents(element)
-    if (!element.children.length) {
+    if (!element.children.length || (element.children.length === 1 && element.lastElementChild.nodeName === 'BR')) {
       appendSpanInEmptyBlock(editor, element, parents, false)
     }
   })
