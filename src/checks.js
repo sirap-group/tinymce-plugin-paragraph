@@ -117,6 +117,8 @@ function appendSpanInEmptyBlock (editor, element, parents, shouldSelect) {
       }
     })
   }
+  // editor.fire('pluginParagraph:appendSpanInEmptyBlock')
+  spanInAParagraph(editor, findNodes.parents($newSpan[0]))
 }
 
 /**
