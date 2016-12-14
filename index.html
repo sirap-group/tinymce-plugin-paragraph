@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Tinymce-plugin-paragraph by sirap-group</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Tinymce-plugin-paragraph</h1>
+        <h2>A plugin for tinymce WYSIWYG HTML editor that allow to edit paragraph properties.</h2>
+        <a href="https://github.com/sirap-group/tinymce-plugin-paragraph" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="tinymce-plugin-paragraph" class="anchor" href="#tinymce-plugin-paragraph" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tinymce Plugin Paragraph</h1>
+
+<p><img src="https://img.shields.io/github/tag/sirap-group/tinymce-plugin-paragraph.svg?maxAge=2592000?style=plastic" alt="GitHub tag">
+<a href="https://www.npmjs.com/package/tinymce-plugin-paragraph"><img src="https://img.shields.io/npm/v/tinymce-plugin-paragraph.svg?maxAge=2592000?style=plastic" alt="npm"></a>
+<a href="https://github.com/sirap-group/tinymce-plugin-paragraph"><img src="https://img.shields.io/bower/v/tinymce-plugin-paragraph.svg?maxAge=2592000?style=plastic" alt="Bower"></a></p>
+
+<p><a href="http://standardjs.com/"><img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg" alt="JavaScript Style Guide"></a>
+<a href="http://semver.org/"><img src="https://img.shields.io/badge/Versioning-Semver%202.0-brightgreen.svg" alt="Semver 2.0"></a>
+<a href="https://github.com/sirap-group/tinymce-plugin-paragraph"><img src="https://img.shields.io/gitter/room/nwjs/nw.js.svg?maxAge=2592000?style=plastic" alt="Gitter"></a></p>
+
+<p>A plugin for the open source <a href="https://github.com/tinymce/tinymce">tinymce WYSIWYG HTML editor</a> that allow to edit paragraph properties.</p>
+
+<h2>
+<a id="screenshots" class="anchor" href="#screenshots" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a> Screenshots</h2>
+
+<h3>
+<a id="contextual-menu" class="anchor" href="#contextual-menu" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a> Contextual menu</h3>
+
+<p>Open the "Paragraph properties" window in the contextual menu opened on a paragraph.</p>
+
+<p><img src="screenshots/contextual-menu.png" alt="paragraph properties item in the contextual menu"></p>
+
+<h3>
+<a id="general-tab" class="anchor" href="#general-tab" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>General tab</h3>
+
+<p><img src="screenshots/general-tab.png" alt="general tab"></p>
+
+<h3>
+<a id="spacing-tab" class="anchor" href="#spacing-tab" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Spacing tab</h3>
+
+<p><img src="screenshots/spacing-tab.png" alt="Spacing Tab"></p>
+
+<h3>
+<a id="borders-tab" class="anchor" href="#borders-tab" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Borders tab</h3>
+
+<p><img src="screenshots/borders-tab.png" alt="Borders Tab"></p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
+
+<h2>
+<a id="with-package-managers-recommanded" class="anchor" href="#with-package-managers-recommanded" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>With package managers (recommanded)</h2>
+
+<pre><code>bower install tinymce-plugin-paragraph --save
+</code></pre>
+
+<p>or</p>
+
+<pre><code>npm install tinymce-plugin-paragraph --save
+</code></pre>
+
+<h2>
+<a id="or-manually" class="anchor" href="#or-manually" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Or manually</h2>
+
+<p>Download</p>
+
+<pre><code>wget https://github.com/sirap-group/tinymce-plugin-paragraph/archive/v0.5.0.zip
+unzip v0.5.0.zip
+mv tinymce-plugin-paragraph-v0.5.0 public/lib/tinymce-plugin-paragraph
+</code></pre>
+
+<h3>
+<a id="configure-your-app" class="anchor" href="#configure-your-app" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Configure your app</h3>
+
+<div class="highlight highlight-text-html-basic"><pre>&lt;<span class="pl-ent">script</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text/javascript<span class="pl-pds">"</span></span> <span class="pl-e">src</span>=<span class="pl-s"><span class="pl-pds">"</span>lib/tinymce-plugin-paragraph/plugin.min.js<span class="pl-pds">"</span></span>&gt;&lt;/<span class="pl-ent">script</span>&gt;</pre></div>
+
+<div class="highlight highlight-source-js"><pre><span class="pl-smi">tinymce</span>.<span class="pl-en">init</span>({
+  selector<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>textarea<span class="pl-pds">"</span></span>,  <span class="pl-c">// change this value according to your HTML</span>
+  plugins<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>paragraph<span class="pl-pds">"</span></span>
+});</pre></div>
+
+<h2>
+<a id="developement" class="anchor" href="#developement" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Developement</h2>
+
+<p><a href="https://github.com/feross/standard"><img src="https://cdn.rawgit.com/feross/standard/master/badge.svg" alt="JavaScript Style Guide"></a></p>
+
+<p>The javascript source files are located in the <code>src</code> folder.
+We use the <a href="http://standardjs.com/">Standard Javascript Code Style</a> to keep the code clean and nice and <a href="http://browserify.org/">browserify</a> to keep it modular and well organized.
+Finally, we use <a href="http://gruntjs.com/">Grunt</a> to run the developement tasks:</p>
+
+<ul>
+<li>
+<a href="https://github.com/pdehaan/grunt-standard">grunt-standard</a> to lint the source files in <code>src</code>,</li>
+<li>
+<a href="https://github.com/jmreidy/grunt-browserify">grunt-browserify</a>
+to bundle it to the <code>plugin.js</code> file.</li>
+<li>
+<a href="https://github.com/gruntjs/grunt-contrib-uglify">grunt-contrib-uglify</a> to minimize <code>plugin.js</code> to <code>plugin.min.js</code>
+</li>
+<li>
+<a href="https://github.com/vojtajina/grunt-bump">grunt-bump</a> to increment the version number, updating <code>package.json</code>, <code>bower.json</code> and creating a new <code>git tag</code>.</li>
+</ul>
+
+<p>We use the <a href="http://semver.org/">Semver 2.0</a> (Semantic Versioning) to standardize the release version numbers (major/minor/path/pre-release).</p>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h2>
+
+<p>According to the main project, <a href="https://github.com/tinymce/tinymce">tinymce</a>, this plugin is open sourced and is licensed under the <a href="LICENSE">LGPL-v2</a> (GNU Lesser General Public License V2.1)</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/sirap-group/tinymce-plugin-paragraph/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/sirap-group/tinymce-plugin-paragraph/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/sirap-group/tinymce-plugin-paragraph"></a> is maintained by <a href="https://github.com/sirap-group">sirap-group</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
